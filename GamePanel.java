@@ -16,16 +16,16 @@ public class GamePanel extends JPanel implements ActionListener {
 	
 	int rowCountX;	// The number of horizontal rows
 	int rowCountY;	// The number of vertical rows
-	int getRowWidth() { return (int) getSize().getWidth() / rowCountX; }
-	int getRowHeight() { return (int) getSize().getHeight() / rowCountY; }
+	int getRowWidth() { return (int) getSize().getWidth() / rowCountX; }	// The width of one row in pixels.
+	int getRowHeight() { return (int) getSize().getHeight() / rowCountY; }	// The height of one row in pixels.
 	
-	Timer timer;
-	float speed;	// How often the current piece drops down one row in drops per second
-	boolean paused = false;
+	Timer timer;	// The timer responsible for dropping the pieces down one row.
+	float speed;	// How often the current piece drops down one row in drops per second.
+	boolean paused = false;	// Whether the game is currently paused (true) or running (false).
 	
-	int currentScore;
+	int currentScore;	// The current score (calculated by speed and lines removed).
 	
-	GameWindow window;
+	GameWindow window;	// The parent window in which this GamePanel is in.
 	
 	
 	// INITIALIZING
@@ -38,13 +38,16 @@ public class GamePanel extends JPanel implements ActionListener {
 		timer.start();
 		
 		
-		setFocusable(true);
+		setFocusable(true);	// So this class gets the key events.
 		
 	}
 	
 	
 	// TIMER EVENT
-			
+	
+	/**
+	 * This gets called every time the timer is at 0 and is responsible for the game flow.
+	 */
 	public void actionPerformed (ActionEvent e) {
 		
 		// TODO: Either move the current piece down one row or if it already is down then create a new shape.
