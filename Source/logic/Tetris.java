@@ -159,15 +159,15 @@ public class Tetris implements ActionListener, KeyListener{
 			}
 			if (full) {
 				deleteRow(y);
-				y-- // we have to check this line again because all the lines dropped down one
-				score++;
+				y--; // we have to check this line again because all the lines dropped down one
+				currentScore++;
 			}
 		}
 		
 	}
 	
-	deleteRow(int y) {
-		for (int x = 0; x < rowCount; x++) {
+	void deleteRow(int y) {
+		for (int x = 0; x < rowCountX; x++) {
 			// Delete every piece in the y row.
 			gameBoard[x][y] = null;
 			// Drop every row above the y row down by one (xrow for xrow)
