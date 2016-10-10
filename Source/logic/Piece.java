@@ -1,12 +1,14 @@
 package logic;
 
+import java.awt.Color;
+
 public class Piece {
 	
 	// PROPERTIES
 	
 	float probability; // UNDONE: How likely is this shape to apear.
 	
-	int color = 0; // 0 = white; 1 = blue; 2 = green;
+	public Color color = new Color(204, 102, 102);
 	
 	public Vector2 position;
 	
