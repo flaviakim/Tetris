@@ -81,6 +81,7 @@ public class Tetris implements ActionListener, KeyListener{
 			dropDownOne();
 		} else {
 			placePiece();
+			deleteFullRows();
 			generateNewPiece();
 		}
 		
@@ -144,6 +145,37 @@ public class Tetris implements ActionListener, KeyListener{
 		
 		gameBoard[v.x][v.y] = currentPiece;
 		currentPiece = null;
+	}
+	
+	
+	void deleteFullRows() {
+		
+		for (int y = 0; y < rowCountY; y++) {
+			boolean full = true;
+			for (int x = 0; x < rowCountX; x++) {
+				if (isPositionOccupied(x, y) == false) {
+					full = false;
+				}
+			}
+			if (full) {
+				deleteRow(y);
+				y-- // we have to check this line again because all the lines dropped down one
+				score++;
+			}
+		}
+		
+	}
+	
+	deleteRow(int y) {
+		for (int x = 0; x < rowCount; x++) {
+			// Delete every piece in the y row.
+			gameBoard[x][y] = null;
+			// Drop every row above the y row down by one (xrow for xrow)
+			for (int i = y; i > 0; i--) {
+				gameBoard[x][i] = gameBoard[x][i-1];
+			}
+		}
+		
 	}
 	
 	
