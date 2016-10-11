@@ -21,9 +21,10 @@ public class Piece {
 	// INITIALIZING
 	
 	public Piece(int x, int y) {
-		
-		position = new Vector2(x, y);
-				
+		position = new Vector2(x, y);	
+	}
+	public Piece(Vector2 position) {
+		this.position = position;
 	}
 		
 }

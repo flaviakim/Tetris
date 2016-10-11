@@ -51,7 +51,6 @@ public class Tetris implements ActionListener, KeyListener {
 		gameBoard = new Piece[rowCountX][rowCountY];
 		
 		updateTimer = new Timer((int)(1000/speed), this);
-		updateTimer.setInitialDelay(0);
 				
 		startGame();
 		
@@ -60,6 +59,7 @@ public class Tetris implements ActionListener, KeyListener {
 	
 	public void startGame () {
 		
+		updateTimer.setInitialDelay(0);
 		updateTimer.start();
 				
 	}
@@ -76,12 +76,12 @@ public class Tetris implements ActionListener, KeyListener {
 		//		 If the creation of the shape isn't possible the game is over.
 				
 		if (currentPiece == null) {
+			deleteFullRows();
 			generateNewPiece();
 		} else if (canDropDownOne()) {
 			dropDownOne();
 		} else {
 			placePiece();
-			deleteFullRows();
 		}
 		
 		System.out.println("actionPerformed!");
