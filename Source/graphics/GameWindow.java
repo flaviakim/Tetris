@@ -9,12 +9,12 @@ import logic.Tetris;
 
 /**
  * Manages the different Panels in the Window.
- * Right now only the GamePanel. Later also Score, nextPiecePanel, 
+ * Right now only the GamePanel. Later also Score, nextPiecePanel, etc.
  **/
 public class GameWindow extends JFrame {
 	
 	GamePanel panel;
-	public Tetris getCurrentGame() {
+	public Tetris getCurrentGame() {	// Not currently used. But maybe later, when showing different JPanels in this GameWindow which need to know Game Logic stuff (like the score). Maybe make them in the GamePanel. But then the window size has to be resized by the GamePanel. 
 		if (panel != null) {
 			return panel.getGame();
 		} else {
@@ -24,7 +24,6 @@ public class GameWindow extends JFrame {
 	
 	public GameWindow(int width, int height) {
 				
-		//TODO: Add Game Panel
 		//TODO: Add Score Label
 		//TODO: Add Start Screen instead of starting immediately (a different Panel than the GamePanel, only create GamePanel when pressed play)
 		

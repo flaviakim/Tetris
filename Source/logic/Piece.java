@@ -11,18 +11,17 @@ public class Piece {
 	
 	// PROPERTIES
 	
-	
-	float probability; // UNDONE: How likely is this shape to apear.
-	
-	public Color color = new Color(204, 102, 102);
+	public Color color = new Color(204, 102, 102); // TODO: Use color according to the Shape this Piece is part of.
 	
 	public Vector2 position;
+	
+	// TODO: The Shape this is part of
+	
 	
 	// INITIALIZING
 	
 	public Piece(int x, int y) {
 		
-		// TODO: Bigger Sizes than only 1 square Tiles. 
 		position = new Vector2(x, y);
 				
 	}

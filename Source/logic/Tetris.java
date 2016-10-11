@@ -3,8 +3,8 @@ package logic;
 import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import graphics.GamePanel;
 
@@ -12,6 +12,8 @@ import graphics.GamePanel;
  * This is the class that handles the main game logic. It starts immediately when created.
  **/
 public class Tetris implements ActionListener, KeyListener{
+	
+	// PROPERTIES
 	
 	int rowCountX = 10;	// The number of horizontal rows
 	public int getRowCountX() { return rowCountX; }
@@ -201,6 +203,7 @@ public class Tetris implements ActionListener, KeyListener{
 	
 	public void keyTyped(KeyEvent e) {}
 	public void keyReleased(KeyEvent e) {}
+	
 	public void keyPressed(KeyEvent e) {
 		
 		switch(e.getKeyCode()) {
@@ -221,7 +224,6 @@ public class Tetris implements ActionListener, KeyListener{
 				// Non-relevant Key Pressed. Ignore.
 				break;
 		}
-		
 		
 		panel.repaint();
 		System.out.println("Key Pressed!");
@@ -261,7 +263,7 @@ public class Tetris implements ActionListener, KeyListener{
 	
 	
 	
-	// ACCESSOR METHODS
+	// GAME BOARD METHODS
 	
 	public boolean isPositionOccupied(int x, int y) {
 		if (x >= rowCountX || x < 0 || y >= rowCountY || y < 0) {
