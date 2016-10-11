@@ -6,6 +6,9 @@ import javax.swing.JLabel;
 import logic.*;
 import graphics.*;
 
+// Compile all files with:
+// javac $(find . -name "*.java")
+
 public class Main {
 	
 	static int windowHeight = 500;

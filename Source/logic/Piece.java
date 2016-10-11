@@ -2,9 +2,15 @@ package logic;
 
 import java.awt.Color;
 
+// TODO: Enum with different kind of shapes.
+// TODO: Static Dictionary inside linking Colors to Shapes.
+// TODO: How to arrange Pieces for each Shape.
+
+
 public class Piece {
 	
 	// PROPERTIES
+	
 	
 	float probability; // UNDONE: How likely is this shape to apear.
 	

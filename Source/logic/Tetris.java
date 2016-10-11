@@ -20,6 +20,9 @@ public class Tetris implements ActionListener, KeyListener{
 	public int getRowWidth() { return (int) panel.getSize().getWidth() / rowCountX; }	// The width of one row in pixels.
 	public int getRowHeight() { return (int) panel.getSize().getHeight() / rowCountY; }	// The height of one row in pixels.
 	
+	public int piecesPerShape = 4;
+	public int rowsAboveGameLine = piecesPerShape;
+	
 	Timer updateTimer;	// The timer responsible for dropping the pieces down one row.
 	public Timer getTimer() { return updateTimer; }
 	float speed = 1;	// How often the current piece drops down one row in drops per second.
@@ -170,6 +173,9 @@ public class Tetris implements ActionListener, KeyListener{
 		for (int x = 0; x < rowCountX; x++) {
 			// Delete every piece in the y row.
 			gameBoard[x][y] = null;
+			
+			// TODO: Animate Line Removal (pause game, send message to panel, wait for panel to finish animation, unpause).
+			
 			// Drop every row above the y row down by one (xrow for xrow)
 			for (int i = y; i > 0; i--) {
 				gameBoard[x][i] = gameBoard[x][i-1];
