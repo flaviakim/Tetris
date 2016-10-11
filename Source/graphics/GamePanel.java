@@ -94,7 +94,7 @@ public class GamePanel extends JPanel {
 	}
 	
 	public void drawGameOverLine(Graphics g) {
-		int y = game.getRowsAboveGameLine() * game.getRowWidth();
+		int y = game.getRowsAboveGameLine() * game.getRowHeight();
 		g.setColor(Color.red);
 		g.drawLine(0, y, (int) getSize().getWidth(), y);
 		

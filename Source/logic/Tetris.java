@@ -9,7 +9,7 @@ import java.awt.event.KeyEvent;
 import graphics.GamePanel;
 
 /**
- *
+ * This is the class that handles the main game logic. It starts immediately when created.
  **/
 public class Tetris implements ActionListener, KeyListener{
 	
@@ -26,10 +26,10 @@ public class Tetris implements ActionListener, KeyListener{
 	Timer updateTimer;	// The timer responsible for dropping the pieces down one row.
 	public Timer getTimer() { return updateTimer; }
 	float speed = 1;	// How often the current piece drops down one row in drops per second.
-	boolean paused = false;	// Whether the game is currently paused (true) or running (false).
+	boolean paused = false;	// TODO! Whether the game is currently paused (true) or running (false).
 	
 	Piece[][] gameBoard; // x and y coordinates for each piece. 0,0 is the top left corner.
-	Piece currentPiece;	// TODO: make an Array
+	Piece currentPiece;	// TODO: make an Array of size piecesPerShape.
 	public Piece getCurrentPiece() { return currentPiece; }
 	
 	int currentScore;	// The current score (calculated by speed and lines removed).
@@ -153,7 +153,7 @@ public class Tetris implements ActionListener, KeyListener{
 	}
 	
 	/**
-	 *	This Method checks all rows and deletes them if they are full with deleteRow().
+	 *	Checks all rows and deletes them if they are full with deleteRow().
 	 **/
 	void deleteFullRows() {
 		
@@ -177,12 +177,16 @@ public class Tetris implements ActionListener, KeyListener{
 		
 	}
 	
+	/**
+	 * Deletes the specified y row and drops all the pieces above by one.
+	 **/
 	void deleteRow(int y) {
 		for (int x = 0; x < rowCountX; x++) {
 			// Delete every piece in the y row.
 			gameBoard[x][y] = null;
 			
 			// TODO: Animate Line Removal (pause game, send message to panel, wait for panel to finish animation, unpause).
+			// or by setting a variable +1 and if the variable is >0 the update Timer drops every piece and sets it -1. (This would just with dropping the line(s) one tic instead of animating sth)
 			
 			// Drop every row above the y row down by one (xrow for xrow)
 			for (int i = y; i > 0; i--) {
