@@ -3,15 +3,17 @@ package logic;
 import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import graphics.GamePanel;
 
 /**
- *
+ * This is the class that handles the main game logic. It starts immediately when created.
  **/
 public class Tetris implements ActionListener, KeyListener{
+	
+	// PROPERTIES
 	
 	int rowCountX = 10;	// The number of horizontal rows
 	public int getRowCountX() { return rowCountX; }
@@ -20,13 +22,16 @@ public class Tetris implements ActionListener, KeyListener{
 	public int getRowWidth() { return (int) panel.getSize().getWidth() / rowCountX; }	// The width of one row in pixels.
 	public int getRowHeight() { return (int) panel.getSize().getHeight() / rowCountY; }	// The height of one row in pixels.
 	
+	public int piecesPerShape = 4;
+	public int getRowsAboveGameLine() { return piecesPerShape; } // How many lines are only for the new Piece to generate in. TODO: If a piece get's added there in the GameBoard, the Game is over!
+	
 	Timer updateTimer;	// The timer responsible for dropping the pieces down one row.
 	public Timer getTimer() { return updateTimer; }
 	float speed = 1;	// How often the current piece drops down one row in drops per second.
-	boolean paused = false;	// Whether the game is currently paused (true) or running (false).
+	boolean paused = false;	// TODO! Whether the game is currently paused (true) or running (false).
 	
 	Piece[][] gameBoard; // x and y coordinates for each piece. 0,0 is the top left corner.
-	Piece currentPiece;
+	Piece currentPiece;	// TODO: make an Array of size piecesPerShape.
 	public Piece getCurrentPiece() { return currentPiece; }
 	
 	int currentScore;	// The current score (calculated by speed and lines removed).
@@ -81,6 +86,7 @@ public class Tetris implements ActionListener, KeyListener{
 			dropDownOne();
 		} else {
 			placePiece();
+			deleteFullRows();
 			generateNewPiece();
 		}
 		
@@ -142,8 +148,54 @@ public class Tetris implements ActionListener, KeyListener{
 			System.out.println("Tetris::placePiece -- ERROR: There is already a Piece, where the current should be placed!\nProbably the canDropDownOne check went wrong.");
 		}
 		
+		// TODO: If Peace get's placed over the line, call GameOver().
+		
 		gameBoard[v.x][v.y] = currentPiece;
 		currentPiece = null;
+	}
+	
+	/**
+	 *	Checks all rows and deletes them if they are full with deleteRow().
+	 **/
+	void deleteFullRows() {
+		
+		// Check each y row.
+		for (int y = 0; y < rowCountY; y++) {
+			boolean full = true;
+			// Check each x in the y rows.
+			for (int x = 0; x < rowCountX; x++) {
+				// If one x isn't occupied, the y row isn't full and we can jump to the next y loop
+				if (isPositionOccupied(x, y) == false) {
+					full = false;
+					break; // TOCHECK: Does this end the x loop or the if statement? Probably the x loop. Wouldn't matter anyway, only slightly for performance. Better: continue the y loop with the next y, so we don't have to declare the boolean variable.
+				}
+			}
+			if (full) {
+				deleteRow(y);
+				y--; // We have to check this line again because all the lines dropped down one.
+				currentScore++;
+			}
+		}
+		
+	}
+	
+	/**
+	 * Deletes the specified y row and drops all the pieces above by one.
+	 **/
+	void deleteRow(int y) {
+		for (int x = 0; x < rowCountX; x++) {
+			// Delete every piece in the y row.
+			gameBoard[x][y] = null;
+			
+			// TODO: Animate Line Removal (pause game, send message to panel, wait for panel to finish animation, unpause).
+			// or by setting a variable +1 and if the variable is >0 the update Timer drops every piece and sets it -1. (This would just with dropping the line(s) one tic instead of animating sth)
+			
+			// Drop every row above the y row down by one (xrow for xrow)
+			for (int i = y; i > 0; i--) {
+				gameBoard[x][i] = gameBoard[x][i-1];
+			}
+		}
+		
 	}
 	
 	
@@ -151,19 +203,26 @@ public class Tetris implements ActionListener, KeyListener{
 	
 	public void keyTyped(KeyEvent e) {}
 	public void keyReleased(KeyEvent e) {}
+	
 	public void keyPressed(KeyEvent e) {
 		
-		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-			tryMoveLeft();
-		}
-		else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-			tryMoveRight();
-		}
-		else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-			dropDownOne(); // drop down one row
-		}
-		else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-			while(dropDownOne()) {} // drop down to the bottom.
+		switch(e.getKeyCode()) {
+			case KeyEvent.VK_LEFT:
+				tryMoveLeft();
+				break;
+			case KeyEvent.VK_RIGHT:
+				tryMoveRight();
+				break;
+			case KeyEvent.VK_DOWN:
+				dropDownOne(); // drop down one row
+				break;
+			case KeyEvent.VK_SPACE:
+				while(dropDownOne()) {} // drop down to the bottom.
+				// TODO: Set Timer to 0, so the Piece get's added to the board immediately and can't be moved anymore.
+				break;
+			default:
+				// Non-relevant Key Pressed. Ignore.
+				break;
 		}
 		
 		panel.repaint();
@@ -204,7 +263,7 @@ public class Tetris implements ActionListener, KeyListener{
 	
 	
 	
-	// ACCESSOR METHODS
+	// GAME BOARD METHODS
 	
 	public boolean isPositionOccupied(int x, int y) {
 		if (x >= rowCountX || x < 0 || y >= rowCountY || y < 0) {
