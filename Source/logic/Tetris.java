@@ -21,7 +21,7 @@ public class Tetris implements ActionListener, KeyListener{
 	public int getRowHeight() { return (int) panel.getSize().getHeight() / rowCountY; }	// The height of one row in pixels.
 	
 	public int piecesPerShape = 4;
-	public int rowsAboveGameLine = piecesPerShape;
+	public int getRowsAboveGameLine() { return piecesPerShape; } // How many lines are only for the new Piece to generate in. TODO: If a piece get's added there in the GameBoard, the Game is over!
 	
 	Timer updateTimer;	// The timer responsible for dropping the pieces down one row.
 	public Timer getTimer() { return updateTimer; }
@@ -29,7 +29,7 @@ public class Tetris implements ActionListener, KeyListener{
 	boolean paused = false;	// Whether the game is currently paused (true) or running (false).
 	
 	Piece[][] gameBoard; // x and y coordinates for each piece. 0,0 is the top left corner.
-	Piece currentPiece;
+	Piece currentPiece;	// TODO: make an Array
 	public Piece getCurrentPiece() { return currentPiece; }
 	
 	int currentScore;	// The current score (calculated by speed and lines removed).
@@ -146,23 +146,31 @@ public class Tetris implements ActionListener, KeyListener{
 			System.out.println("Tetris::placePiece -- ERROR: There is already a Piece, where the current should be placed!\nProbably the canDropDownOne check went wrong.");
 		}
 		
+		// TODO: If Peace get's placed over the line, call GameOver().
+		
 		gameBoard[v.x][v.y] = currentPiece;
 		currentPiece = null;
 	}
 	
-	
+	/**
+	 *	This Method checks all rows and deletes them if they are full with deleteRow().
+	 **/
 	void deleteFullRows() {
 		
+		// Check each y row.
 		for (int y = 0; y < rowCountY; y++) {
 			boolean full = true;
+			// Check each x in the y rows.
 			for (int x = 0; x < rowCountX; x++) {
+				// If one x isn't occupied, the y row isn't full and we can jump to the next y loop
 				if (isPositionOccupied(x, y) == false) {
 					full = false;
+					break; // TOCHECK: Does this end the x loop or the if statement? Probably the x loop. Wouldn't matter anyway, only slightly for performance. Better: continue the y loop with the next y, so we don't have to declare the boolean variable.
 				}
 			}
 			if (full) {
 				deleteRow(y);
-				y--; // we have to check this line again because all the lines dropped down one
+				y--; // We have to check this line again because all the lines dropped down one.
 				currentScore++;
 			}
 		}
@@ -210,19 +218,6 @@ public class Tetris implements ActionListener, KeyListener{
 				break;
 		}
 		
-		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-			tryMoveLeft();
-		}
-		else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-			tryMoveRight();
-		}
-		else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-			dropDownOne(); // drop down one row
-		}
-		else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-			while(dropDownOne()) {} // drop down to the bottom.
-			// TODO: Set Timer to 0, so the Piece get's added to the board immediately and can't be moved anymore.
-		}
 		
 		panel.repaint();
 		System.out.println("Key Pressed!");

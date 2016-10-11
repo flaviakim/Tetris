@@ -60,6 +60,8 @@ public class GamePanel extends JPanel {
 			}
 		}
 		
+		drawGameOverLine(g);
+		
 	}
 	
 	void paintCurrentPiece(Graphics g) {
@@ -91,6 +93,12 @@ public class GamePanel extends JPanel {
 		
 	}
 	
+	public void drawGameOverLine(Graphics g) {
+		int y = game.getRowsAboveGameLine() * game.getRowWidth();
+		g.setColor(Color.red);
+		g.drawLine(0, y, (int) getSize().getWidth(), y);
+		
+	}
 	
 	
 	
