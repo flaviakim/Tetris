@@ -191,6 +191,25 @@ public class Tetris implements ActionListener, KeyListener{
 	public void keyReleased(KeyEvent e) {}
 	public void keyPressed(KeyEvent e) {
 		
+		switch(e.getKeyCode()) {
+			case KeyEvent.VK_LEFT:
+				tryMoveLeft();
+				break;
+			case KeyEvent.VK_RIGHT:
+				tryMoveRight();
+				break;
+			case KeyEvent.VK_DOWN:
+				dropDownOne(); // drop down one row
+				break;
+			case KeyEvent.VK_SPACE:
+				while(dropDownOne()) {} // drop down to the bottom.
+				// TODO: Set Timer to 0, so the Piece get's added to the board immediately and can't be moved anymore.
+				break;
+			default:
+				// Non-relevant Key Pressed. Ignore.
+				break;
+		}
+		
 		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 			tryMoveLeft();
 		}
@@ -202,6 +221,7 @@ public class Tetris implements ActionListener, KeyListener{
 		}
 		else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 			while(dropDownOne()) {} // drop down to the bottom.
+			// TODO: Set Timer to 0, so the Piece get's added to the board immediately and can't be moved anymore.
 		}
 		
 		panel.repaint();
