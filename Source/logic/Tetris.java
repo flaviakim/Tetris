@@ -11,7 +11,7 @@ import graphics.GamePanel;
 /**
  * This is the class that handles the main game logic. It starts immediately when created.
  **/
-public class Tetris implements ActionListener, KeyListener{
+public class Tetris implements ActionListener, KeyListener {
 	
 	// PROPERTIES
 	
@@ -51,6 +51,7 @@ public class Tetris implements ActionListener, KeyListener{
 		gameBoard = new Piece[rowCountX][rowCountY];
 		
 		updateTimer = new Timer((int)(1000/speed), this);
+		updateTimer.setInitialDelay(0);
 				
 		startGame();
 		
@@ -60,10 +61,7 @@ public class Tetris implements ActionListener, KeyListener{
 	public void startGame () {
 		
 		updateTimer.start();
-		generateNewPiece();
-		
-		panel.repaint();
-		
+				
 	}
 	
 	
@@ -78,16 +76,12 @@ public class Tetris implements ActionListener, KeyListener{
 		//		 If the creation of the shape isn't possible the game is over.
 				
 		if (currentPiece == null) {
-			System.out.println("GameLogic::actionPerformed -- ERROR: current Piece == null.\nThere should always be a current piece!");
-			return;
-		}
-		
-		if (canDropDownOne()) {
+			generateNewPiece();
+		} else if (canDropDownOne()) {
 			dropDownOne();
 		} else {
 			placePiece();
 			deleteFullRows();
-			generateNewPiece();
 		}
 		
 		System.out.println("actionPerformed!");
@@ -206,6 +200,18 @@ public class Tetris implements ActionListener, KeyListener{
 	
 	public void keyPressed(KeyEvent e) {
 		
+		if (e.getKeyCode() == KeyEvent.VK_P) {
+			pauseGame();
+			return;
+		}
+		
+		if (paused) {
+			return;
+		}
+		if (currentPiece == null) {
+			return;
+		}
+		
 		switch(e.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
 				tryMoveLeft();
@@ -218,7 +224,7 @@ public class Tetris implements ActionListener, KeyListener{
 				break;
 			case KeyEvent.VK_SPACE:
 				while(dropDownOne()) {} // drop down to the bottom.
-				// TODO: Set Timer to 0, so the Piece get's added to the board immediately and can't be moved anymore.
+				updateTimer.restart();	// Set the Timer to 0, so the Piece get's added to the board immediately and can't be moved anymore.
 				break;
 			default:
 				// Non-relevant Key Pressed. Ignore.
@@ -227,6 +233,15 @@ public class Tetris implements ActionListener, KeyListener{
 		
 		panel.repaint();
 		System.out.println("Key Pressed!");
+	}
+	
+	void pauseGame() {
+		paused = !paused;
+		if (paused) {
+			updateTimer.stop();
+		} else {
+			updateTimer.start();
+		}
 	}
 	
 	boolean tryMoveLeft() {
