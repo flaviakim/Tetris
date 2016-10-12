@@ -16,16 +16,13 @@ public enum Shape {
 	
 	// PROPERTIES
 	
-	Piece[] pieces;
+	Vector2[] positions;
 	Color color;
 	
 	// INITIALIZING
 	
 	Shape(Vector2[] positions, Color color) {
-		pieces = new Piece[positions.length];
-		for (int i = 0; i < positions.length; i++) {
-			pieces[i] = new Piece(positions[i]);
-		}
+		this.positions = positions;
 		this.color = color;
 	}
 	

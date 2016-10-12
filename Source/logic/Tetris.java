@@ -101,7 +101,7 @@ public class Tetris implements ActionListener, KeyListener {
 		// TODO: Check if full!
 		
 		// Choose a random starting location
-		int startX = (int) Math.random() * rowCountX;
+		int startX = (int) (Math.random() * rowCountX);
 		
 		currentPiece = new Piece(startX, 0);
 	}
