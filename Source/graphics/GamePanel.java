@@ -37,17 +37,22 @@ public class GamePanel extends JPanel {
 	}
 	
 	
-	
+	/**
+	 * 
+	 **/
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
 		paintGameBoard(g);
-		if (game.getCurrentPiece() != null) {
-			paintCurrentPiece(g);
+		if (game.getCurrentPieces() != null) {
+			paintCurrentPieces(g);
 		}
 				
 	} 
 	
+	/**
+	 * Paints
+	 **/
 	void paintGameBoard(Graphics g) {
 		
 		for (int x = 0; x < game.getRowCountX(); x++) {
@@ -63,12 +68,24 @@ public class GamePanel extends JPanel {
 		
 	}
 	
-	void paintCurrentPiece(Graphics g) {
-		Piece c = game.getCurrentPiece();
-		drawSinglePiece(g, c.position.x, c.position.y, c.color);
-		
+	/**
+	 * Paints the Pieces currently falling down (the current Shape);
+	 **/
+	void paintCurrentPieces(Graphics g) {
+		if (game.getCurrentPieces() == null) {
+			System.out.println("ERROR: GamePanel::paintCurrentPieces -- No current Piece to draw!");
+			return;
+		}
+
+		for (int i = 0; i < game.getCurrentPieces().length; i++) {
+			Piece c = game.getCurrentPieces()[i];
+			drawSinglePiece(g, c.position.x, c.position.y, c.color);
+		}
 	}
 	
+	/**
+	 * Paints one single Piece at it's position with the Piece's color and with a small 3d effect (brighter and darker edges).
+	 **/
 	void drawSinglePiece(Graphics g, int x, int y, Color c) {
 		// Get the PixelPositions for left, right top and bottom
 		int firstPixelX = game.getRowWidth() * x;

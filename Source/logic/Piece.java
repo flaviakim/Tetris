@@ -11,7 +11,7 @@ public class Piece {
 	
 	// PROPERTIES
 	
-	public Color color = new Color(204, 102, 102); // TODO: Use color according to the Shape this Piece is part of.
+	public Color color = new Color(254, 254, 254); // The color of this Piece (default color shouldn't actually be used)
 	
 	public Vector2 position;
 	
@@ -21,9 +21,20 @@ public class Piece {
 	// INITIALIZING
 	
 	public Piece(int x, int y) {
-		
-		position = new Vector2(x, y);
-				
+		position = new Vector2(x, y);	
+		System.out.println("ERROR: Wrong Piece Constructor used");
+	}
+	public Piece(Vector2 position) {
+		this.position = new Vector2 (position.x, position.y);
+		System.out.println("ERROR: Wrong Piece Constructor used");
+	}
+	public Piece(int x, int y, Color color) {
+		this.color = color;
+		position = new Vector2(x, y);	
+	}
+	public Piece(Vector2 position, Color color) {
+		this.color = color;
+		this.position = new Vector2 (position.x, position.y);
 	}
 		
 }
