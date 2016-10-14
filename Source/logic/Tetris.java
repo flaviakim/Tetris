@@ -28,7 +28,8 @@ public class Tetris implements ActionListener, KeyListener {
 	Timer updateTimer;	// The timer responsible for dropping the pieces down one row.
 	public Timer getTimer() { return updateTimer; }
 	float speed = 1;	// How often the current piece drops down one row in drops per second.
-	boolean paused = false;	// TODO! Whether the game is currently paused (true) or running (false).
+	boolean paused = false;	// Whether the game is currently paused (true) or running (false).
+	boolean gameOver = false;
 	
 	Piece[][] gameBoard; // x and y coordinates for each piece. 0,0 is the top left corner.
 	Piece[] currentPieces;
@@ -39,6 +40,7 @@ public class Tetris implements ActionListener, KeyListener {
 	public Shape getNextShape() { return nextShape; }
 	
 	int currentScore;	// The current score (calculated by speed and lines removed).
+	public int getCurrentScore() { return currentScore; }
 	
 	GamePanel panel;	// The parent panel in which this GameLogic is displayed in.
 	
@@ -86,7 +88,7 @@ public class Tetris implements ActionListener, KeyListener {
 		//		 If the creation of the shape isn't possible the game is over.
 				
 		if (currentPieces == null) {
-			deleteFullRows();
+			checkFullRows();
 			generateNewShape();
 		} else if (canDropDownOne()) {
 			dropDownOne();
@@ -103,7 +105,7 @@ public class Tetris implements ActionListener, KeyListener {
 	// GAME UPDATE METHODS
 	
 	/**
-	 * This generates new Pieces according to the next Shape at the top of the board at the middle.
+	 * This generates new Pieces according to the next Shape at the top of the board at a random x position.
 	 **/
 	void generateNewShape() {
 		
@@ -113,16 +115,23 @@ public class Tetris implements ActionListener, KeyListener {
 		}
 		
 		currentShape = nextShape;
+		int posX = (int)(Math.random() * (rowCountX - currentShape.getWidth() + 1));
 		currentPieces = new Piece[currentShape.getPositions().length];
 		for (int i = 0; i < currentPieces.length; i++) {
 			currentPieces[i] = new Piece(currentShape.getPositions()[i], currentShape.color);
-			System.out.println("Generated new Piece at (" + currentShape.getPositions()[i].x + "/" + currentShape.getPositions()[i].y + ")");
+			currentPieces[i].position.x += posX;
+			if (gameBoard[currentPieces[i].position.x][currentPieces[i].position.y] != null) {
+				currentPieces = null;
+				doGameOver();
+				return;
+			}
+			//System.out.println("Generated new Piece at (" + currentShape.getPositions()[i].x + "/" + currentShape.getPositions()[i].y + ")");
 		}
 		
-		// Moves the tile into the middle
+		/*// Moves the tile into the middle -- unused
 		for (int i = 0; i < ((rowCountX/2) - (currentShape.getWidth()/2)); i++) {
 			tryMoveRight();
-		}
+		}*/
 		
 		generateNextShape();
 				
@@ -134,9 +143,6 @@ public class Tetris implements ActionListener, KeyListener {
 	 * Generates a new Random Shape for the next Shape.
 	 **/
 	void generateNextShape() {
-		// TODO: Random Generation of all Shapes!
-		
-		
 		nextShape = Shape.getRandomShape();
 	}
 	
@@ -178,20 +184,19 @@ public class Tetris implements ActionListener, KeyListener {
 		for (int i = 0; i < currentPieces.length; i++) {
 			Vector2 v = currentPieces[i].position;
 			if (gameBoard[v.x][v.y] != null) {
+				//doGameOver();
 				System.out.println("Tetris::placeCurrentPieces -- ERROR: There is already a Piece, where the current should be placed!\nProbably the canDropDownOne check went wrong or Game Over didn't work.");
 			}
-			// TODO: If Peace get's placed over the line, call GameOver().
 			gameBoard[v.x][v.y] = currentPieces[i];
 		}
 		currentPieces = null;
-		
 		//System.out.println("placedCurrentPieces");
 	}
 	
 	/**
 	 * Checks all rows and deletes them if they are full with deleteRow().
 	 **/
-	void deleteFullRows() {
+	void checkFullRows() {
 		
 		// Check each y row.
 		for (int y = 0; y < rowCountY; y++) {
@@ -230,7 +235,15 @@ public class Tetris implements ActionListener, KeyListener {
 				gameBoard[x][i] = gameBoard[x][i-1];
 			}
 		}
-		
+	}
+	
+	/**
+	 * If a Piece can't be placed anymore this Game Over Method should end the Game.
+	 **/
+	void doGameOver() {
+		updateTimer.stop();
+		gameOver = true;
+		panel.doGameOver();
 	}
 	
 	
@@ -243,6 +256,11 @@ public class Tetris implements ActionListener, KeyListener {
 	 * 
 	 **/
 	public void keyPressed(KeyEvent e) {
+		
+		if (gameOver) {
+			// TODO: Key to restart the Game.
+			return;
+		}
 		
 		if (e.getKeyCode() == KeyEvent.VK_P) {
 			pauseGame();
@@ -264,7 +282,8 @@ public class Tetris implements ActionListener, KeyListener {
 				tryMoveRight();
 				break;
 			case KeyEvent.VK_DOWN:
-				dropDownOne(); // drop down one row
+				//dropDownOne(); // drop down one row
+				updateTimer.restart();
 				break;
 			case KeyEvent.VK_SPACE:
 				while(dropDownOne()) {} // drop down to the bottom.

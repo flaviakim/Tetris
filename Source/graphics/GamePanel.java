@@ -20,6 +20,7 @@ public class GamePanel extends JPanel {
 	Tetris game;		// Where the whole logic for the game is in.
 	public Tetris getGame() { return game; }
 	
+	JLabel gameOverLabel;
 	
 	// INITIALIZING
 	
@@ -36,9 +37,24 @@ public class GamePanel extends JPanel {
 		System.out.println("GamePanel created!");
 	}
 	
+	// METHODS
+	
+	public void doGameOver() {
+		int endScore = game.getCurrentScore();
+		// TODO: Display "Game Over" and The endScore and which button to restart.
+		gameOverLabel = new JLabel("GAME OVER\nScore: " + endScore, javax.swing.SwingConstants.CENTER);
+		gameOverLabel.setBackground(new Color (200, 200, 200, 100) );
+		gameOverLabel.setVisible(true);
+		this.add(gameOverLabel);
+		repaint();
+		System.out.println("Game Over!");
+	}
+	
+	
+	// PAINTING
 	
 	/**
-	 * 
+	 * This is used to draw everything in the game.
 	 **/
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -51,7 +67,7 @@ public class GamePanel extends JPanel {
 	} 
 	
 	/**
-	 * Paints
+	 * Paints all the Pieces saved in the Game Board.
 	 **/
 	void paintGameBoard(Graphics g) {
 		
@@ -63,9 +79,7 @@ public class GamePanel extends JPanel {
 				}
 			}
 		}
-		
-		drawGameOverLine(g);
-		
+				
 	}
 	
 	/**
@@ -109,12 +123,6 @@ public class GamePanel extends JPanel {
 		
 	}
 	
-	public void drawGameOverLine(Graphics g) {
-		int y = game.getRowsAboveGameLine() * game.getRowHeight();
-		g.setColor(Color.red);
-		g.drawLine(0, y, (int) getSize().getWidth(), y);
-		
-	}
 	
 	
 	
