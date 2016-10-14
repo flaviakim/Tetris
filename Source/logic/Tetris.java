@@ -20,9 +20,7 @@ public class Tetris implements ActionListener, KeyListener {
 	int rowCountY = 20;	// The number of vertical rows
 	public int getRowCountY() { return rowCountY; }
 		
-		// The size of the game is defined by the width of it's parent. The Height is calculated with the rowCount.
-	//public int getRowWidth() { return (int) panel.getSize().getWidth() / rowCountX; }	// The width of one row in pixels.
-	//public int getRowHeight() { return (int) panel.getSize().getHeight() / rowCountY; }	// The height of one row in pixels.
+		// The size of the game is defined by the width of it's parent. The Height is calculated with rowCountX and rowCountY.
 	public int getGameWidth() { return (int) getWindow().getSize().getWidth(); }	// The width of the Game
 	public int getRowSize() { return getGameWidth() / rowCountX; } // The width and height of one row.
 	public int getGameHeight() { return getRowSize() * rowCountY; } // The height of the Game (defined by it's width and the row Counts.

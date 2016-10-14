@@ -52,11 +52,6 @@ public class GameWindow extends JFrame {
 		startScreenPanel = null;
 		
 		gamePanel = new GamePanel(this, 3, 10, 20); // window, speed, rowCountX, rowCountY TODO: Use variables instead of hardcoding it.
-		this.getContentPane().add(gamePanel);
-		gamePanel.addKeyListener(gamePanel.getGame());
-		gamePanel.setFocusable(true);
-		gamePanel.requestFocusInWindow();
-		gamePanel.setVisible(true);
 		
 		this.pack();
 		
@@ -65,11 +60,6 @@ public class GameWindow extends JFrame {
 	
 	void createStartScreenPanel() {
 		startScreenPanel = new StartScreenPanel(this);
-		this.getContentPane().add(startScreenPanel);
-		startScreenPanel.addKeyListener(startScreenPanel);
-		startScreenPanel.setFocusable(true);
-		startScreenPanel.requestFocusInWindow();
-		startScreenPanel.setVisible(true);
 	}
 	
 	

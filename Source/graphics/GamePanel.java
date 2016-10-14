@@ -34,6 +34,12 @@ public class GamePanel extends JPanel {
 		
 		setPreferredSize(new Dimension((int)window.getSize().getWidth(), game.getGameHeight()));
 		
+		addKeyListener(game);
+		setFocusable(true);
+		setVisible(true);
+		window.getContentPane().add(this);
+		requestFocusInWindow();
+		
 		System.out.println("GamePanel created!");
 	}
 	

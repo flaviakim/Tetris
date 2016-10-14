@@ -21,6 +21,13 @@ public class StartScreenPanel extends JPanel implements KeyListener {
 	
 	public StartScreenPanel(GameWindow window) {
 		this.window = window;
+		
+		window.getContentPane().add(this);
+		addKeyListener(this);
+		setFocusable(true);
+		requestFocusInWindow();
+		setVisible(true);
+		
 		setBackground(Color.black);
 		// TODO: Add Label with menu text.
 	}
