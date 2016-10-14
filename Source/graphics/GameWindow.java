@@ -27,7 +27,7 @@ public class GameWindow extends JFrame {
 		//TODO: Add Score Label
 		//TODO: Add Start Screen instead of starting immediately (a different Panel than the GamePanel, only create GamePanel when pressed play)
 		
-		panel = new GamePanel(this, 1, 10, 20);
+		panel = new GamePanel(this, 3, 10, 20); // window, speed, rowCountX, rowCountY
 		panel.setVisible(true);
 		this.add(panel);
 		

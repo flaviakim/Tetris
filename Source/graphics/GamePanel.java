@@ -20,6 +20,8 @@ public class GamePanel extends JPanel {
 	Tetris game;		// Where the whole logic for the game is in.
 	public Tetris getGame() { return game; }
 	
+	JLabel gameOverLabel;
+	JLabel pauseLabel;
 	
 	// INITIALIZING
 	
@@ -36,9 +38,45 @@ public class GamePanel extends JPanel {
 		System.out.println("GamePanel created!");
 	}
 	
+	// METHODS
+	
+	public void doGameOver() {
+		int endScore = game.getCurrentScore();
+		// TODO: Display "Game Over" and The endScore and which button to restart.
+		gameOverLabel = new JLabel("<html>GAME OVER<br>Score: " + endScore + "<br>Restart with Space</html>", javax.swing.SwingConstants.CENTER);
+		gameOverLabel.setBackground(new Color (200, 200, 200, 180) );
+		gameOverLabel.setVisible(true);
+		gameOverLabel.setOpaque(true);
+		gameOverLabel.setBounds(0, 60, (int)this.getSize().getWidth(), 60);
+		this.add(gameOverLabel);
+		repaint();
+		System.out.println("Game Over!");
+	}
+	
+	public void restartGame() {
+		this.remove(gameOverLabel);
+		gameOverLabel = null;
+	}
+	
+	public void changePauseLabel() {
+		if (game.getPaused()) {
+			pauseLabel = new JLabel ("Paused", javax.swing.SwingConstants.CENTER);
+			pauseLabel.setBackground(new Color (200, 200, 200, 100) );
+			pauseLabel.setVisible(true);
+			pauseLabel.setOpaque(true);
+			pauseLabel.setBounds(0, 60, (int)this.getSize().getWidth(), 60);
+			this.add(pauseLabel);
+		} else {
+			this.remove(pauseLabel);
+			pauseLabel = null;
+		}
+		repaint();
+	}
+	
+	// PAINTING
 	
 	/**
-	 * 
+	 * This is used to draw everything in the game.
 	 **/
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -51,7 +89,7 @@ public class GamePanel extends JPanel {
 	} 
 	
 	/**
-	 * Paints
+	 * Paints all the Pieces saved in the Game Board.
 	 **/
 	void paintGameBoard(Graphics g) {
 		
@@ -63,9 +101,7 @@ public class GamePanel extends JPanel {
 				}
 			}
 		}
-		
-		drawGameOverLine(g);
-		
+				
 	}
 	
 	/**
@@ -109,12 +145,6 @@ public class GamePanel extends JPanel {
 		
 	}
 	
-	public void drawGameOverLine(Graphics g) {
-		int y = game.getRowsAboveGameLine() * game.getRowHeight();
-		g.setColor(Color.red);
-		g.drawLine(0, y, (int) getSize().getWidth(), y);
-		
-	}
 	
 	
 	
