@@ -30,6 +30,7 @@ public class Tetris implements ActionListener, KeyListener {
 	float speed = 1;		// How often the current piece drops down one row in drops per second.
 	float initialSpeed = 1; // In case the speed changes during the game (not yet implemented) and we wan't to restart it with this.
 	boolean paused = false;	// Whether the game is currently paused (true) or running (false).
+	public boolean getPaused() { return paused; }
 	boolean gameOver = false;
 	
 	Piece[][] gameBoard; // x and y coordinates for each piece. 0,0 is the top left corner.
@@ -329,6 +330,7 @@ public class Tetris implements ActionListener, KeyListener {
 		} else {
 			updateTimer.start();
 		}
+		panel.changePauseLabel();
 	}
 	
 	/**

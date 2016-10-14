@@ -21,6 +21,7 @@ public class GamePanel extends JPanel {
 	public Tetris getGame() { return game; }
 	
 	JLabel gameOverLabel;
+	JLabel pauseLabel;
 	
 	// INITIALIZING
 	
@@ -42,8 +43,8 @@ public class GamePanel extends JPanel {
 	public void doGameOver() {
 		int endScore = game.getCurrentScore();
 		// TODO: Display "Game Over" and The endScore and which button to restart.
-		gameOverLabel = new JLabel("<html>GAME OVER<br>Score: " + endScore + "</html>", javax.swing.SwingConstants.CENTER);
-		gameOverLabel.setBackground(new Color (200, 200, 200, 100) );
+		gameOverLabel = new JLabel("<html>GAME OVER<br>Score: " + endScore + "<br>Restart with Space</html>", javax.swing.SwingConstants.CENTER);
+		gameOverLabel.setBackground(new Color (200, 200, 200, 180) );
 		gameOverLabel.setVisible(true);
 		gameOverLabel.setOpaque(true);
 		gameOverLabel.setBounds(0, 60, (int)this.getSize().getWidth(), 60);
@@ -57,6 +58,20 @@ public class GamePanel extends JPanel {
 		gameOverLabel = null;
 	}
 	
+	public void changePauseLabel() {
+		if (game.getPaused()) {
+			pauseLabel = new JLabel ("Paused", javax.swing.SwingConstants.CENTER);
+			pauseLabel.setBackground(new Color (200, 200, 200, 100) );
+			pauseLabel.setVisible(true);
+			pauseLabel.setOpaque(true);
+			pauseLabel.setBounds(0, 60, (int)this.getSize().getWidth(), 60);
+			this.add(pauseLabel);
+		} else {
+			this.remove(pauseLabel);
+			pauseLabel = null;
+		}
+		repaint();
+	}
 	
 	// PAINTING
 	
