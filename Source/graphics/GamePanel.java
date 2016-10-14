@@ -52,6 +52,11 @@ public class GamePanel extends JPanel {
 		System.out.println("Game Over!");
 	}
 	
+	public void restartGame() {
+		this.remove(gameOverLabel);
+		gameOverLabel = null;
+	}
+	
 	
 	// PAINTING
 	

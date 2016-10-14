@@ -27,7 +27,8 @@ public class Tetris implements ActionListener, KeyListener {
 	
 	Timer updateTimer;	// The timer responsible for dropping the pieces down one row.
 	public Timer getTimer() { return updateTimer; }
-	float speed = 1;	// How often the current piece drops down one row in drops per second.
+	float speed = 1;		// How often the current piece drops down one row in drops per second.
+	float initialSpeed = 1; // In case the speed changes during the game (not yet implemented) and we wan't to restart it with this.
 	boolean paused = false;	// Whether the game is currently paused (true) or running (false).
 	boolean gameOver = false;
 	
@@ -56,11 +57,13 @@ public class Tetris implements ActionListener, KeyListener {
 		this.rowCountX = rowCountX;
 		this.rowCountY = rowCountY;
 		this.speed = speed;
+		this.initialSpeed = speed;
 		
 		gameBoard = new Piece[rowCountX][rowCountY];
 		
 		updateTimer = new Timer((int)(1000/speed), this);
-				
+		updateTimer.setInitialDelay(0);
+
 		startGame();
 		
 		System.out.println("GameLogic created! Game started!");
@@ -70,10 +73,20 @@ public class Tetris implements ActionListener, KeyListener {
 	 * 
 	 **/
 	public void startGame () {
-		
-		updateTimer.setInitialDelay(0);
 		updateTimer.start();
-				
+	}
+	
+	/**
+	 * 
+	 **/
+	public void restartGame() {
+		panel.restartGame();
+		gameBoard = new Piece[rowCountX][rowCountY];
+		currentScore = 0;
+		speed = initialSpeed;
+		gameOver = false;
+		updateTimer.setDelay((int)(1000/speed));
+		updateTimer.restart();
 	}
 	
 	
@@ -259,6 +272,9 @@ public class Tetris implements ActionListener, KeyListener {
 		
 		if (gameOver) {
 			// TODO: Key to restart the Game.
+			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+				restartGame();
+			}
 			return;
 		}
 		
