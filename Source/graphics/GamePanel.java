@@ -42,9 +42,11 @@ public class GamePanel extends JPanel {
 	public void doGameOver() {
 		int endScore = game.getCurrentScore();
 		// TODO: Display "Game Over" and The endScore and which button to restart.
-		gameOverLabel = new JLabel("GAME OVER\nScore: " + endScore, javax.swing.SwingConstants.CENTER);
+		gameOverLabel = new JLabel("<html>GAME OVER<br>Score: " + endScore + "</html>", javax.swing.SwingConstants.CENTER);
 		gameOverLabel.setBackground(new Color (200, 200, 200, 100) );
 		gameOverLabel.setVisible(true);
+		gameOverLabel.setOpaque(true);
+		gameOverLabel.setBounds(0, 60, (int)this.getSize().getWidth(), 60);
 		this.add(gameOverLabel);
 		repaint();
 		System.out.println("Game Over!");
