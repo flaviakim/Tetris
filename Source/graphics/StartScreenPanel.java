@@ -22,6 +22,7 @@ public class StartScreenPanel extends JPanel implements KeyListener {
 	public StartScreenPanel(GameWindow window) {
 		this.window = window;
 		setBackground(Color.black);
+		// TODO: Add Label with menu text.
 	}
 	
 	
