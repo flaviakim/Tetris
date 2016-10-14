@@ -24,10 +24,7 @@ public class Tetris implements ActionListener, KeyListener {
 	public int getGameWidth() { return (int) getWindow().getSize().getWidth(); }	// The width of the Game
 	public int getRowSize() { return getGameWidth() / rowCountX; } // The width and height of one row.
 	public int getGameHeight() { return getRowSize() * rowCountY; } // The height of the Game (defined by it's width and the row Counts.
-	
-	public int piecesPerShape = 4;
-	public int getRowsAboveGameLine() { return piecesPerShape; } // How many lines are only for the new Piece to generate in. TODO: If a piece get's added there in the GameBoard, the Game is over!
-	
+		
 	Timer updateTimer;	// The timer responsible for dropping the pieces down one row.
 	public Timer getTimer() { return updateTimer; }
 	float speed = 1;		// How often the current piece drops down one row in drops per second.
