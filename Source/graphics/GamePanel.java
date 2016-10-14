@@ -2,10 +2,10 @@ package graphics;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Dimension;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.Timer;
 
 import logic.*;
 
@@ -13,6 +13,8 @@ import logic.*;
  * This class generates the Game Logic class (which handles the game) and displays it.
  **/
 public class GamePanel extends JPanel {
+
+	// PROPERTIES
 	
 	GameWindow window;	// The parent window in which this GamePanel is in.
 	public GameWindow getWindow() { return window; }
@@ -30,10 +32,7 @@ public class GamePanel extends JPanel {
 		
 		game = new Tetris(this, speed, rowCountX, rowCountY);
 		
-		setFocusable(true);	// So this class gets the key events.
-		setVisible(true);
-		
-		addKeyListener(game);
+		setPreferredSize(new Dimension((int)window.getSize().getWidth(), game.getGameHeight()));
 		
 		System.out.println("GamePanel created!");
 	}
@@ -124,14 +123,14 @@ public class GamePanel extends JPanel {
 	 **/
 	void drawSinglePiece(Graphics g, int x, int y, Color c) {
 		// Get the PixelPositions for left, right top and bottom
-		int firstPixelX = game.getRowWidth() * x;
-		int firstPixelY = game.getRowHeight() * y;
-		int lastPixelX = firstPixelX + game.getRowWidth() - 1;
-		int lastPixelY = firstPixelY + game.getRowHeight() - 1;
+		int firstPixelX = game.getRowSize() * x;
+		int firstPixelY = game.getRowSize() * y;
+		int lastPixelX = firstPixelX + game.getRowSize() - 1;
+		int lastPixelY = firstPixelY + game.getRowSize() - 1;
 		
 		// Fill the middle of the square.
 		g.setColor(c);
-		g.fillRect(firstPixelX, firstPixelY, game.getRowWidth() - 1, game.getRowHeight() - 1);
+		g.fillRect(firstPixelX, firstPixelY, game.getRowSize() - 1, game.getRowSize() - 1);
 		// Draw the top and left border with a brighter color.
 		g.setColor(c.brighter());
 		g.drawLine(firstPixelX, firstPixelY, lastPixelX, firstPixelY); 	// top left to top (right-1)
