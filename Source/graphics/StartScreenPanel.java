@@ -15,6 +15,8 @@ public class StartScreenPanel extends JPanel implements KeyListener {
 	// PROPERTIES
 	
 	GameWindow window;	// The parent window in which this GamePanel is in.
+	JLabel titelLabel;	// The Titel
+	JLabel message;
 	
 	
 	// INITIALIZING
