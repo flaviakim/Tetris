@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import graphics.GamePanel;
+import graphics.*;
 
 /**
  * This is the class that handles the main game logic. It starts immediately when created.
@@ -19,12 +19,12 @@ public class Tetris implements ActionListener, KeyListener {
 	public int getRowCountX() { return rowCountX; }
 	int rowCountY = 20;	// The number of vertical rows
 	public int getRowCountY() { return rowCountY; }
-	public int getRowWidth() { return (int) panel.getSize().getWidth() / rowCountX; }	// The width of one row in pixels.
-	public int getRowHeight() { return (int) panel.getSize().getHeight() / rowCountY; }	// The height of one row in pixels.
-	
-	public int piecesPerShape = 4;
-	public int getRowsAboveGameLine() { return piecesPerShape; } // How many lines are only for the new Piece to generate in. TODO: If a piece get's added there in the GameBoard, the Game is over!
-	
+		
+		// The size of the game is defined by the width of it's parent. The Height is calculated with rowCountX and rowCountY.
+	public int getGameWidth() { return (int) getWindow().getSize().getWidth(); }	// The width of the Game
+	public int getRowSize() { return getGameWidth() / rowCountX; } // The width and height of one row.
+	public int getGameHeight() { return getRowSize() * rowCountY; } // The height of the Game (defined by it's width and the row Counts.
+		
 	Timer updateTimer;	// The timer responsible for dropping the pieces down one row.
 	public Timer getTimer() { return updateTimer; }
 	float speed = 1;		// How often the current piece drops down one row in drops per second.
@@ -45,6 +45,7 @@ public class Tetris implements ActionListener, KeyListener {
 	public int getCurrentScore() { return currentScore; }
 	
 	GamePanel panel;	// The parent panel in which this GameLogic is displayed in.
+	GameWindow getWindow() { return panel.getWindow(); } // The window this game('s panel) is displayed in.
 	
 	
 	// INITIALIZING
@@ -394,17 +395,17 @@ public class Tetris implements ActionListener, KeyListener {
 		int middleY = (Shape.getHeight(currentPieces)-1) / 2;
 		int leftmostX = Shape.getLeftmostPiece(currentPieces).position.x;
 		int highestY = Shape.getHighestPiece(currentPieces).position.y;
-		System.out.println("width: " + Shape.getWidth(currentPieces) + ", height: " + Shape.getHeight(currentPieces));
-		System.out.println("middleX: " + middleX + ", middleY: " + middleY);
+		//System.out.println("width: " + Shape.getWidth(currentPieces) + ", height: " + Shape.getHeight(currentPieces));
+		//System.out.println("middleX: " + middleX + ", middleY: " + middleY);
 		for (Piece p : currentPieces) {
 			int currX = p.position.x - middleX - leftmostX; // The current x position of the piece relative to the middle Piece
 			int currY = p.position.y - middleY - highestY; // The current y position of the piece relative to the middle Piece
 			int newX = -currY;
 			int newY = currX;
-			System.out.println("newX relative to middle Piece: " + newX + "; newY relative to middle Piece: " + newY);
+			//System.out.println("newX relative to middle Piece: " + newX + "; newY relative to middle Piece: " + newY);
 			newX += middleX + leftmostX;
 			newY += middleY + highestY;
-			System.out.println("newX in GameWorld: " + newX + "; newY in GameWorld: " + newY);
+			//System.out.println("newX in GameWorld: " + newX + "; newY in GameWorld: " + newY);
 			p.position.x = newX;
 			p.position.y = newY;
 		}
