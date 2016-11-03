@@ -149,6 +149,8 @@ public class GamePanel extends JPanel {
         //System.out.println("Single Piece drawn at: (" + x + ", " + y + ")");
 
     }
+    
+    // TODO: Draw level information.
 
 
 

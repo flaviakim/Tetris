@@ -15,6 +15,10 @@ public class Piece {
 	
 	public Vector2 position;
 	
+	Shape shape;
+	
+	boolean center;
+	
 	// TODO: The Shape this is part of
 	
 	

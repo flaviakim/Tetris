@@ -29,6 +29,7 @@ public class Tetris implements ActionListener, KeyListener {
 	public Timer getTimer() { return updateTimer; }
 	float speed = 1;		// How often the current piece drops down one row in drops per second.
 	float initialSpeed = 1; // In case the speed changes during the game (not yet implemented) and we wan't to restart it with this.
+	float speedPerLevel = 0.5f;	// By how much the speed gets raised per level.
 	boolean paused = false;	// Whether the game is currently paused (true) or running (false).
 	public boolean getPaused() { return paused; }
 	boolean gameOver = false;
@@ -41,7 +42,10 @@ public class Tetris implements ActionListener, KeyListener {
 	Shape nextShape;
 	public Shape getNextShape() { return nextShape; }
 	
-	int currentScore;	// The current score (calculated by speed and lines removed).
+	int linesDeleted = 0;	// How many lines were deleted in the current game.
+	int level = 1;			// The current level.
+	int linesPerLevel = 5;	// How many lines do we have to delete to raise a level
+	int currentScore = 0;	// The current score (calculated by speed and lines removed).
 	public int getCurrentScore() { return currentScore; }
 	
 	GamePanel panel;	// The parent panel in which this GameLogic is displayed in.
@@ -103,6 +107,7 @@ public class Tetris implements ActionListener, KeyListener {
 		//		 If the creation of the shape isn't possible the game is over.
 				
 		if (currentPieces == null) {
+			recalcSpeed();
 			checkFullRows();
 			generateNewShape();
 		} else if (canDropDownOne()) {
@@ -114,6 +119,14 @@ public class Tetris implements ActionListener, KeyListener {
 		//System.out.println("actionPerformed!");
 		panel.repaint();
 		
+	}
+	
+	/**
+	 * Recalculates the speed with the score.
+	 */
+	void recalcSpeed() {
+		speed = ((currentScore / 4) * 0.5f) + initialSpeed;
+		updateTimer.setDelay((int)(1000/speed));
 	}
 	
 	
@@ -251,6 +264,7 @@ public class Tetris implements ActionListener, KeyListener {
 			}
 		}
 	}
+	
 	
 	/**
 	 * If a Piece can't be placed anymore this Game Over Method should end the Game.

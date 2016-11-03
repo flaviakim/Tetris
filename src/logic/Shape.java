@@ -22,7 +22,8 @@ public enum Shape {
 	private static final Shape[] VALUES = values();
 	private static final int SIZE = VALUES.length;
 	private static final Random RANDOM = new Random();
-	Vector2[] positions;
+	
+	Vector2[] positions; // TODO The first position should be the center piece. So we can rotate around it.
 	public Vector2[] getPositions() { return positions; }
 	int turns = 0;
 	Color color;
