@@ -50,7 +50,7 @@ public class GameWindow extends JFrame {
         this.remove(startScreenPanel);
         startScreenPanel = null;
 
-        gamePanel = new GamePanel(this, 2, 10, 20); // window, speed, rowCountX, rowCountY TODO: Use variables instead of hardcoding it.
+        gamePanel = new GamePanel(this, 0.1f, 10, 20); // window, speed, rowCountX, rowCountY TODO: Use variables instead of hardcoding it.
 
         this.pack();
 
