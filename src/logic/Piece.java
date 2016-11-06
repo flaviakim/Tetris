@@ -15,16 +15,15 @@ public class Piece {
 	
 	public Vector2 position;
 	
+	// The Shape this Piece is part of. (TODO: Take color from Shape)
 	Shape shape;
-	
-	boolean center;
-	
+		
 	// TODO: The Shape this is part of
 	
 	
 	// INITIALIZING
 	
-	public Piece(int x, int y) {
+	/*public Piece(int x, int y) {
 		position = new Vector2(x, y);	
 		System.out.println("ERROR: Wrong Piece Constructor used");
 	}
@@ -35,10 +34,11 @@ public class Piece {
 	public Piece(int x, int y, Color color) {
 		this.color = color;
 		position = new Vector2(x, y);	
-	}
-	public Piece(Vector2 position, Color color) {
+	}*/
+	public Piece(Vector2 position, Color color, Shape shape) {
 		this.color = color;
 		this.position = new Vector2 (position.x, position.y);
+		this.shape = shape;
 	}
 		
 }

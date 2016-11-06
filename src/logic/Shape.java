@@ -9,13 +9,13 @@ public enum Shape {
 	
 	// SHAPES
 	
-	I_SHAPE			(new Vector2[]{new Vector2(0,0), new Vector2(0,1), new Vector2(0,2), new Vector2(0,3)}, new Color (204, 102, 102)),
-	L_SHAPE			(new Vector2[]{new Vector2(0,0), new Vector2(0,1), new Vector2(0,2), new Vector2(1,2)}, new Color (102, 204, 102)),
-	L_REVERSE_SHAPE	(new Vector2[]{new Vector2(1,0), new Vector2(1,1), new Vector2(1,2), new Vector2(0,2)}, new Color (102, 102, 204)),
-	S_SHAPE			(new Vector2[]{new Vector2(0,1), new Vector2(1,1), new Vector2(1,0), new Vector2(2,0)}, new Color (204, 204, 102)),
-	T_SHAPE			(new Vector2[]{new Vector2(0,0), new Vector2(0,1), new Vector2(0,2), new Vector2(1,1)}, new Color (204, 102, 204)),
-	Z_SHAPE			(new Vector2[]{new Vector2(0,0), new Vector2(1,0), new Vector2(1,1), new Vector2(2,1)}, new Color (102, 204, 204)),
-	SQUARE_SHAPE	(new Vector2[]{new Vector2(0,0), new Vector2(0,1), new Vector2(1,0), new Vector2(1,1)}, new Color (102, 102, 102));
+	I_SHAPE		(new Vector2[]{new Vector2(1,0), new Vector2(0,0), new Vector2(2,0), new Vector2(3,0)}, new Color (204, 102, 102), true),
+	L_SHAPE		(new Vector2[]{new Vector2(1,1), new Vector2(0,1), new Vector2(2,1), new Vector2(2,0)}, new Color (102, 204, 102), true),
+	J_SHAPE		(new Vector2[]{new Vector2(1,1), new Vector2(0,0), new Vector2(0,1), new Vector2(2,1)}, new Color (102, 102, 204), true),
+	S_SHAPE		(new Vector2[]{new Vector2(1,1), new Vector2(0,1), new Vector2(1,0), new Vector2(2,0)}, new Color (204, 204, 102), true),
+	T_SHAPE		(new Vector2[]{new Vector2(1,1), new Vector2(0,1), new Vector2(2,1), new Vector2(1,0)}, new Color (204, 102, 204), true),
+	Z_SHAPE		(new Vector2[]{new Vector2(1,1), new Vector2(0,0), new Vector2(1,0), new Vector2(2,1)}, new Color (102, 204, 204), true),
+	O_SHAPE		(new Vector2[]{new Vector2(0,0), new Vector2(0,1), new Vector2(1,0), new Vector2(1,1)}, new Color (102, 102, 102), false);
 	
 	// PROPERTIES
 	
@@ -25,14 +25,18 @@ public enum Shape {
 	
 	Vector2[] positions; // TODO The first position should be the center piece. So we can rotate around it.
 	public Vector2[] getPositions() { return positions; }
-	int turns = 0;
+	boolean isRotateable;
 	Color color;
 	
 	// INITIALIZING
 	
-	Shape(Vector2[] positions, Color color) {
-		this.positions = positions;
+	Shape(Vector2[] positions, Color color, boolean isRotateable) {
+		this.positions = new Vector2[positions.length];
+		for (int i = 0; i < positions.length; i++) {
+			this.positions[i] = new Vector2 (positions[i].x, positions[i].y);
+		} 
 		this.color = color;
+		this.isRotateable = isRotateable;
 	}
 	
 	// METODS

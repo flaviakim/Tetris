@@ -35,7 +35,7 @@ public class Tetris implements ActionListener, KeyListener {
 	boolean gameOver = false;
 	
 	Piece[][] gameBoard; // x and y coordinates for each piece. 0,0 is the top left corner.
-	Piece[] currentPieces;
+	Piece[] currentPieces; // The current Pieces falling down. The first one is the center Piece the others rotate around.
 	public Piece[] getCurrentPieces() { return currentPieces; }
 	Shape currentShape;
 	public Shape getCurrentShape() { return currentShape; }
@@ -142,11 +142,13 @@ public class Tetris implements ActionListener, KeyListener {
 			generateNextShape();
 		}
 		
+		// Create a new Shape with the Prototype
 		currentShape = nextShape;
+		// Set a random position
 		int posX = (int)(Math.random() * (rowCountX - currentShape.getWidth() + 1));
 		currentPieces = new Piece[currentShape.getPositions().length];
 		for (int i = 0; i < currentPieces.length; i++) {
-			currentPieces[i] = new Piece(currentShape.getPositions()[i], currentShape.color);
+			currentPieces[i] = new Piece(currentShape.getPositions()[i], currentShape.color, currentShape);
 			currentPieces[i].position.x += posX;
 			if (gameBoard[currentPieces[i].position.x][currentPieces[i].position.y] != null) {
 				currentPieces = null;
@@ -402,48 +404,35 @@ public class Tetris implements ActionListener, KeyListener {
 	
 	
 	/**
-	 * Rotates the currentPieces by 90° around the middle in clockwise direction
+	 * Rotates the currentPieces by 90° around the middle in clockwise direction.
 	 **/
 	void rotateClockwise90() {
-		int middleX = (Shape.getWidth(currentPieces)-1) / 2;
-		int middleY = (Shape.getHeight(currentPieces)-1) / 2;
-		int leftmostX = Shape.getLeftmostPiece(currentPieces).position.x;
-		int highestY = Shape.getHighestPiece(currentPieces).position.y;
-		//System.out.println("width: " + Shape.getWidth(currentPieces) + ", height: " + Shape.getHeight(currentPieces));
-		//System.out.println("middleX: " + middleX + ", middleY: " + middleY);
-		for (Piece p : currentPieces) {
-			int currX = p.position.x - middleX - leftmostX; // The current x position of the piece relative to the middle Piece
-			int currY = p.position.y - middleY - highestY; // The current y position of the piece relative to the middle Piece
-			int newX = -currY;
-			int newY = currX;
-			//System.out.println("newX relative to middle Piece: " + newX + "; newY relative to middle Piece: " + newY);
-			newX += middleX + leftmostX;
-			newY += middleY + highestY;
-			//System.out.println("newX in GameWorld: " + newX + "; newY in GameWorld: " + newY);
-			p.position.x = newX;
-			p.position.y = newY;
+		if (currentShape.isRotateable == false) return;
+		
+		int middleY = currentPieces[0].position.y;
+		int middleX = currentPieces[0].position.x;
+		
+		for (int i = 1; i < currentPieces.length; i++) {
+			int newX = middleX - (currentPieces[i].position.y - middleY);
+			int newY = (middleY + currentPieces[i].position.x) - middleX;
+			currentPieces[i].position.y = newY;
+			currentPieces[i].position.x = newX;
 		}
+		
 	}
 	
 	/**
-	 *
+	 * Checks to see if the rotation is possible.
 	 **/
 	boolean canRotateClockwise90() {
-		int middleX = (Shape.getWidth(currentPieces)-1) / 2;
-		int middleY = (Shape.getHeight(currentPieces)-1) / 2;
-		int leftmostX = Shape.getLeftmostPiece(currentPieces).position.x;
-		int highestY = Shape.getHighestPiece(currentPieces).position.y;
-		//System.out.println("width: " + Shape.getWidth(currentPieces) + ", height: " + Shape.getHeight(currentPieces));
-		//System.out.println("middleX: " + middleX + ", middleY: " + middleY);
-		for (Piece p : currentPieces) {
-			int currX = p.position.x - middleX - leftmostX; // The current x position of the piece relative to the middle Piece
-			int currY = p.position.y - middleY - highestY; // The current y position of the piece relative to the middle Piece
-			int newX = -currY;
-			int newY = currX;
-			//System.out.println("newX relative to middle Piece: " + newX + "; newY relative to middle Piece: " + newY);
-			newX += middleX + leftmostX;
-			newY += middleY + highestY;
-			//System.out.println("newX in GameWorld: " + newX + "; newY in GameWorld: " + newY);
+		if (currentShape.isRotateable == false) return false;
+		
+		int middleY = currentPieces[0].position.y;
+		int middleX = currentPieces[0].position.x;
+		
+		for (int i = 1; i < currentPieces.length; i++) {
+			int newX = middleX - (currentPieces[i].position.y - middleY);
+			int newY = (middleY + currentPieces[i].position.x) - middleX;
 			if (isPositionOccupied(newX, newY)) {
 				System.out.println("canRotateClockwise90 -- Rotation impossible, position (" + newX + "/" + newY + ") is already occupied!");
 				return false;
