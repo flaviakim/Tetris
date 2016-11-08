@@ -45,12 +45,12 @@ public class GameWindow extends JFrame {
 
     // METHODS
 
-    void startGame() {
+    void startGame(float speed) {
         startScreenPanel.setEnabled(false);
         this.remove(startScreenPanel);
         startScreenPanel = null;
 
-        gamePanel = new GamePanel(this, 2, 10, 20); // window, speed, rowCountX, rowCountY TODO: Use variables instead of hardcoding it.
+        gamePanel = new GamePanel(this, speed, 10, 20); // window, speed, rowCountX, rowCountY TODO: Use variables instead of hardcoding it.
 
         this.pack();
 
@@ -63,6 +63,16 @@ public class GameWindow extends JFrame {
 	    } catch (Exception ex) {
 			ex.printStackTrace();
 		}
+    }
+    
+    public void endGame() {
+    	gamePanel.setEnabled(false);
+        this.remove(gamePanel);
+        gamePanel = null;
+        
+        createStartScreenPanel();
+        
+        repaint();
     }
 
 

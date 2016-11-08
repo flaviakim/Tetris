@@ -76,14 +76,14 @@ public class Tetris implements ActionListener, KeyListener {
 	}
 	
 	/**
-	 * 
+	 * Starts the Timer and therefore the game.
 	 **/
 	public void startGame () {
 		updateTimer.start();
 	}
 	
 	/**
-	 * 
+	 * Restarts the Game with the same initial speed.
 	 **/
 	public void restartGame() {
 		panel.restartGame();
@@ -93,6 +93,14 @@ public class Tetris implements ActionListener, KeyListener {
 		gameOver = false;
 		updateTimer.setDelay((int)(1000/speed));
 		updateTimer.restart();
+	}
+	
+	/**
+	 * Ends the game and goes back to the Start Screen.
+	 **/
+	public void endGame() {
+		getWindow().endGame();
+		System.out.println("ENDGAME");
 	}
 	
 	
@@ -289,9 +297,15 @@ public class Tetris implements ActionListener, KeyListener {
 	public void keyPressed(KeyEvent e) {
 		
 		if (gameOver) {
-			// TODO: Key to restart the Game.
-			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-				restartGame();
+			switch(e.getKeyCode()) {
+				case KeyEvent.VK_SPACE:
+					restartGame();
+					break;
+				case KeyEvent.VK_ESCAPE:
+					endGame();
+					break;
+				default:
+					break;
 			}
 			return;
 		}
@@ -304,6 +318,7 @@ public class Tetris implements ActionListener, KeyListener {
 		if (paused) {
 			return;
 		}
+		
 		if (currentPieces == null) {
 			return;
 		}
