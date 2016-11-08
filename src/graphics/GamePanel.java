@@ -48,11 +48,11 @@ public class GamePanel extends JPanel {
     public void doGameOver() {
         int endScore = game.getCurrentScore();
         // TODO: Display "Game Over" and The endScore and which button to restart.
-        gameOverLabel = new JLabel("<html>GAME OVER<br>Score: " + endScore + "<br>Restart with Space</html>", javax.swing.SwingConstants.CENTER);
+        gameOverLabel = new JLabel("<html>GAME OVER<br>Score: " + endScore + "<br>Space: Restart<br>esc: Main Menu</html>", javax.swing.SwingConstants.CENTER);
         gameOverLabel.setBackground(new Color (200, 200, 200, 180) );
         gameOverLabel.setVisible(true);
         gameOverLabel.setOpaque(true);
-        gameOverLabel.setBounds(0, 60, (int)this.getSize().getWidth(), 60);
+        gameOverLabel.setBounds(0, 60, (int)this.getSize().getWidth(), 80);
         this.add(gameOverLabel);
         repaint();
         System.out.println("Game Over!");

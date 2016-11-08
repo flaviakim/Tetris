@@ -22,13 +22,19 @@ import java.awt.event.KeyListener;
 class StartScreenPanel extends JPanel implements KeyListener, ActionListener {
 
     // PROPERTIES
+    
+	float[] speeds = {1f, 2f, 4f};
 	
 	/**
 	 * The parent window in which this GamePanel is in.
 	 */
 	private GameWindow window;
 	
-	private JButton playButton;
+	private JButton[] playButtons;
+	
+	private JButton playButtonEasy;
+	private JButton playButtonMedium;
+	private JButton playButtonHard;
 	
 	
     // INITIALIZING
@@ -50,19 +56,25 @@ class StartScreenPanel extends JPanel implements KeyListener, ActionListener {
 		setBorder(new EmptyBorder(15, 30, 15, 30));
 		setBackground(Color.BLACK);
 		
-		playButton = new JButton();
-		playButton.setBorderPainted(false);
-		playButton.setMargin(new Insets(0,0,0,0));
-		playButton.setContentAreaFilled(false);
-		playButton.addActionListener(this);
-		add(playButton);
+		playButtons = new JButton[3];
+		BufferedImage[] playImages = new BufferedImage[3];
+		playImages[0] = ImageIO.read(getClass().getResource("/resources/images/playButton_green.png"));
+		playImages[1] = ImageIO.read(getClass().getResource("/resources/images/playButton_yellow.png"));
+		playImages[2] = ImageIO.read(getClass().getResource("/resources/images/playButton_red.png"));
+		
+		for (int i = 0; i < playButtons.length; i++) {
+			playButtons[i] = new JButton();
+			playButtons[i].setBorderPainted(false);
+			playButtons[i].setMargin(new Insets(0,0,0,0));
+			playButtons[i].setContentAreaFilled(false);
+			playButtons[i].addActionListener(this);
+			add(playButtons[i]);
+			playButtons[i].setIcon(new ImageIcon(playImages[i]));
+		}
 	
-		BufferedImage bi1 = ImageIO.read(getClass().getResource("/resources/images/playButton_green.png"));
-		playButton.setIcon(new ImageIcon(bi1));
-		BufferedImage bi2 = ImageIO.read(getClass().getResource("/resources/images/playButton_yellow.png"));
+		/*playButton.setIcon(new ImageIcon(bi1));
 		playButton.setRolloverIcon(new ImageIcon(bi2));
-		BufferedImage bi3 = ImageIO.read(getClass().getResource("/resources/images/playButton_red.png"));
-		playButton.setPressedIcon(new ImageIcon(bi3));
+		playButton.setPressedIcon(new ImageIcon(bi3));*/
 		
         // TODO: Add more Buttons.
         
@@ -77,7 +89,7 @@ class StartScreenPanel extends JPanel implements KeyListener, ActionListener {
     public void keyPressed(KeyEvent e) {
         switch(e.getKeyCode()) {
             case KeyEvent.VK_SPACE:
-                startGame();
+                startGame(speeds[1]);
                 break;
             default:
                 break;
@@ -89,14 +101,23 @@ class StartScreenPanel extends JPanel implements KeyListener, ActionListener {
 	
 	@Override
 	public void actionPerformed (ActionEvent e) {
-		if (e.getSource() == playButton) startGame();
+		if (e.getSource() == playButtons[0]) {
+			startGame(speeds[0]);
+		} else
+		if (e.getSource() == playButtons[1]) {
+			startGame(speeds[1]);
+		} else
+		if (e.getSource() == playButtons[2]) {
+			startGame(speeds[2]);
+		}
+		
 	}
 	
 	
 	// MISC METHODS
 
-    private void startGame() {
-        window.startGame();
+    private void startGame(float speed) {
+        window.startGame(speed);
     }
 
 
