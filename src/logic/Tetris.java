@@ -52,10 +52,10 @@ public class Tetris implements ActionListener, KeyListener {
 	GameWindow getWindow() { return panel.getWindow(); } // The window this game('s panel) is displayed in.
 	
 	
-	// INITIALIZING
+	// INITIALISING
 	
 	/**
-	 * 
+	 * Initialises the Game and sets the speed and the number of rows.
 	 **/
 	public Tetris (GamePanel panel, float speed, int rowCountX, int rowCountY) {
 		this.panel = panel;
@@ -142,7 +142,7 @@ public class Tetris implements ActionListener, KeyListener {
 	
 	/**
 	 * This generates new Pieces according to the next Shape at the top of the board at a random x position.
-	 **/
+	 */
 	void generateNewShape() {
 		
 		// TODO: Check if full! => GameOver
@@ -292,7 +292,7 @@ public class Tetris implements ActionListener, KeyListener {
 	public void keyReleased(KeyEvent e) {}
 	
 	/**
-	 * 
+	 * Handles the Key Pressed Event.
 	 **/
 	public void keyPressed(KeyEvent e) {
 		
@@ -316,6 +316,11 @@ public class Tetris implements ActionListener, KeyListener {
 		}
 		
 		if (paused) {
+			return;
+		}
+		
+		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+			endGame();
 			return;
 		}
 		
@@ -353,7 +358,7 @@ public class Tetris implements ActionListener, KeyListener {
 	}
 	
 	/**
-	 * 
+	 * Pauses the game.
 	 **/
 	void pauseGame() {
 		paused = !paused;
@@ -366,7 +371,7 @@ public class Tetris implements ActionListener, KeyListener {
 	}
 	
 	/**
-	 * 
+	 * Moves all the Pieces of the Shape to the left if the canMoveLeft methods returns true.
 	 **/
 	boolean tryMoveLeft() {
 		if (canMoveLeft()) {
@@ -380,7 +385,7 @@ public class Tetris implements ActionListener, KeyListener {
 	}
 	
 	/**
-	 * 
+	 * Checks whether all the pieces of the Shape can move left.
 	 **/
 	boolean canMoveLeft() {
 		for (int i = 0; i < currentPieces.length; i++) {
@@ -392,7 +397,7 @@ public class Tetris implements ActionListener, KeyListener {
 	}
 	
 	/**
-	 * 
+	 * Moves all the Pieces of the Shape to the right if the canMoveRight methods returns true.
 	 **/
 	boolean tryMoveRight() {
 		if (canMoveRight()) {
@@ -406,7 +411,7 @@ public class Tetris implements ActionListener, KeyListener {
 	}
 	
 	/**
-	 * 
+	 * Checks whether all the pieces of the Shape can move right.
 	 **/
 	boolean canMoveRight() {
 		for (int i = 0; i < currentPieces.length; i++) {
@@ -460,7 +465,7 @@ public class Tetris implements ActionListener, KeyListener {
 	// GAME BOARD METHODS
 	
 	/**
-	 * 
+	 * Checks if the position (x, y) is occupied with a static piece (not the falling Pieces).
 	 **/
 	public boolean isPositionOccupied(int x, int y) {
 		if (x >= rowCountX || x < 0 || y >= rowCountY || y < 0) {
@@ -473,7 +478,8 @@ public class Tetris implements ActionListener, KeyListener {
 	}
 	
 	/**
-	 * 
+	 * Returns the piece at the (x, y) position or null if there is none.
+	 * Should first be checked with isPositionOccupied(x, y).
 	 **/
 	public Piece getPieceAt(int x, int y) {
 		if (isPositionOccupied(x, y) == false) {
