@@ -1,5 +1,8 @@
 package logic;
 
+/**
+ * A simple <code>class</code> for the 2D position.
+ **/
 public class Vector2 {
 	
 	public int x;

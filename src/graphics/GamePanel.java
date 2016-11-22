@@ -27,10 +27,10 @@ public class GamePanel extends JPanel {
 
     // INITIALIZING
 
-    public GamePanel (GameWindow window, float speed, int rowCountX, int rowCountY) {
+    public GamePanel (GameWindow window, float speed, int rows, int columns) {
         this.window = window;
 
-        game = new Tetris(this, speed, rowCountX, rowCountY);
+        game = new Tetris(this, speed, rows, columns);
 
         setPreferredSize(new Dimension((int)window.getSize().getWidth(), game.getGameHeight()));
 
@@ -45,7 +45,7 @@ public class GamePanel extends JPanel {
 
     // METHODS
 
-    public void doGameOver() {
+    public void doGameOver () {
         int endScore = game.getCurrentScore();
         // TODO: Display "Game Over" and The endScore and which button to restart.
         gameOverLabel = new JLabel("<html>GAME OVER<br>Score: " + endScore + "<br>Space: Restart<br>esc: Main Menu</html>", javax.swing.SwingConstants.CENTER);
@@ -58,12 +58,12 @@ public class GamePanel extends JPanel {
         System.out.println("Game Over!");
     }
 
-    public void restartGame() {
+    public void restartGame () {
         this.remove(gameOverLabel);
         gameOverLabel = null;
     }
 
-    public void changePauseLabel() {
+    public void changePauseLabel () {
         if (game.getPaused()) {
             pauseLabel = new JLabel ("Paused", javax.swing.SwingConstants.CENTER);
             pauseLabel.setBackground(new Color (200, 200, 200, 100) );
@@ -83,12 +83,12 @@ public class GamePanel extends JPanel {
     /**
      * This is used to draw everything in the game.
      **/
-    public void paintComponent(Graphics g) {
+    public void paintComponent (Graphics g) {
         super.paintComponent(g);
 
         paintGameBoard(g);
-        if (game.getCurrentPieces() != null) {
-            paintCurrentPieces(g);
+        if (game.getCurrentShape() != null) {
+            paintCurrentShape(g);
         }
 
     }
@@ -96,10 +96,10 @@ public class GamePanel extends JPanel {
     /**
      * Paints all the Pieces saved in the Game Board.
      **/
-    void paintGameBoard(Graphics g) {
+    void paintGameBoard (Graphics g) {
 
-        for (int x = 0; x < game.getRowCountX(); x++) {
-            for (int y = 0; y < game.getRowCountY(); y++) {
+        for (int x = 0; x < game.getRows(); x++) {
+            for (int y = 0; y < game.getColumns(); y++) {
                 if (game.isPositionOccupied(x, y)) {
                     // draw a rectangle at the appropriate position.
                     drawSinglePiece(g, x, y, game.getPieceAt(x, y).color);
@@ -112,31 +112,30 @@ public class GamePanel extends JPanel {
     /**
      * Paints the Pieces currently falling down (the current Shape);
      **/
-    void paintCurrentPieces(Graphics g) {
-        if (game.getCurrentPieces() == null) {
-            System.out.println("ERROR: GamePanel::paintCurrentPieces -- No current Piece to draw!");
+    void paintCurrentShape (Graphics g) {
+        if (game.getCurrentShape() == null) {
+            System.out.println("ERROR: GamePanel::paintCurrentShape -- No current Shape to draw!");
             return;
         }
 
-        for (int i = 0; i < game.getCurrentPieces().length; i++) {
-            Piece c = game.getCurrentPieces()[i];
-            drawSinglePiece(g, c.position.x, c.position.y, c.color);
+        for (Piece p : game.getCurrentShape().getPieces()) {
+            drawSinglePiece(g, p.position.x, p.position.y, p.color);
         }
     }
 
     /**
      * Paints one single Piece at it's position with the Piece's color and with a small 3d effect (brighter and darker edges).
      **/
-    void drawSinglePiece(Graphics g, int x, int y, Color c) {
+    void drawSinglePiece (Graphics g, int x, int y, Color c) {
         // Get the PixelPositions for left, right top and bottom
-        int firstPixelX = game.getRowSize() * x;
-        int firstPixelY = game.getRowSize() * y;
-        int lastPixelX = firstPixelX + game.getRowSize() - 1;
-        int lastPixelY = firstPixelY + game.getRowSize() - 1;
+        int firstPixelX = game.getPieceSize() * x;
+        int firstPixelY = game.getPieceSize() * y;
+        int lastPixelX = firstPixelX + game.getPieceSize() - 1;
+        int lastPixelY = firstPixelY + game.getPieceSize() - 1;
 
         // Fill the middle of the square.
         g.setColor(c);
-        g.fillRect(firstPixelX, firstPixelY, game.getRowSize() - 1, game.getRowSize() - 1);
+        g.fillRect(firstPixelX, firstPixelY, game.getPieceSize() - 1, game.getPieceSize() - 1);
         // Draw the top and left border with a brighter color.
         g.setColor(c.brighter());
         g.drawLine(firstPixelX, firstPixelY, lastPixelX, firstPixelY); 	// top left to top (right-1)

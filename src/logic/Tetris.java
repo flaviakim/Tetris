@@ -9,66 +9,108 @@ import java.awt.event.KeyListener;
 import graphics.*;
 
 /**
- * This is the class that handles the main game logic. It starts immediately when created.
+ * This is the <code>class</code> that handles the main game logic.
+ * The game starts immediately when created (TODO: start via Main class).
  **/
 public class Tetris implements ActionListener, KeyListener {
 	
 	// PROPERTIES
 	
-	int rowCountX = 10;	// The number of horizontal rows
-	public int getRowCountX() { return rowCountX; }
-	int rowCountY = 20;	// The number of vertical rows
-	public int getRowCountY() { return rowCountY; }
+	int rows = 10;
+	public int getRows() { return rows; }
+	int columns = 20;
+	public int getColumns() { return columns; }
 		
-		// The size of the game is defined by the width of it's parent. The Height is calculated with rowCountX and rowCountY.
-	public int getGameWidth() { return (int) getWindow().getSize().getWidth(); }	// The width of the Game
-	public int getRowSize() { return getGameWidth() / rowCountX; } // The width and height of one row.
-	public int getGameHeight() { return getRowSize() * rowCountY; } // The height of the Game (defined by it's width and the row Counts.
-		
-	Timer updateTimer;	// The timer responsible for dropping the pieces down one row.
+	/**
+	 * The width of the game. Defined by the size of the window.
+	 **/
+	public int getGameWidth() { return (int) panel.getWindow().getSize().getWidth(); }	// The width of the Game
+	/**
+	 * The size of a single square {@link Piece}. It's defined by {@link getGameWidth()}.
+	 **/
+	public int getPieceSize() { return getGameWidth() / rows; }
+	/**
+	 * The height of the game is defined by the {@link getGameWidth()} and {@link getPieceSize()}
+	 **/
+	public int getGameHeight() { return getPieceSize() * columns; }
+	
+	/**
+	 * The timer responsible for dropping the pieces down one row.
+	 **/
+	Timer updateTimer;
 	public Timer getTimer() { return updateTimer; }
-	float speed = 1;		// How often the current piece drops down one row in drops per second.
-	float initialSpeed = 1; // In case the speed changes during the game (not yet implemented) and we wan't to restart it with this.
-	float speedPerLevel = 0.5f;	// By how much the speed gets raised per level.
-	boolean paused = false;	// Whether the game is currently paused (true) or running (false).
-	public boolean getPaused() { return paused; }
+	/**
+	 * How often the {@link currentShape} drops down one row in drops per second.
+	 **/
+	float speed = 1;
+	float initialSpeed = 1; // In case the speed changes during the game we wan't to restart it with this.
+	float speedRaisePerLevel = 0.5f;	// By how much the speed gets raised per level.
+	boolean isPaused = false;
+	public boolean getPaused() { return isPaused; }
 	boolean gameOver = false;
 	
-	Piece[][] gameBoard; // x and y coordinates for each piece. 0,0 is the top left corner.
-	Piece[] currentPieces; // The current Pieces falling down. The first one is the center Piece the others rotate around.
-	public Piece[] getCurrentPieces() { return currentPieces; }
+	/**
+	 * The <code>gameBoard</code> keeps track of all the fallen {@link Piece}s.
+	 * The array represents the x and y coordinates for each piece.
+	 * [0][0] is the top left corner.
+	 * <p>
+	 * The {@link currentShape} is stored separately.
+	 **/
+	Piece[][] gameBoard;
+	
+	/**
+	 * The Shape which is currently falling down.
+	 * It stores all the falling {@link Piece}s.
+	 **/
 	Shape currentShape;
 	public Shape getCurrentShape() { return currentShape; }
 	Shape nextShape;
 	public Shape getNextShape() { return nextShape; }
 	
-	int linesDeleted = 0;	// How many lines were deleted in the current game.
-	int level = 1;			// The current level.
-	int linesPerLevel = 5;	// How many lines do we have to delete to raise a level
-	int currentScore = 0;	// The current score (calculated by speed and lines removed).
+	/**
+	 * Keeps track of the exact number of lines deleted in the current game.
+	 **/
+	int linesDeleted = 0;
+	int level = 1;
+	/**
+	 * How many lines does the player have to delete to get to the next <code>level</code>.
+	 **/
+	int linesPerLevel = 5;
+	/**
+	 * The current score is calculated by speed and lines removed.
+	 **/
+	int currentScore = 0;
 	public int getCurrentScore() { return currentScore; }
 	
-	GamePanel panel;	// The parent panel in which this GameLogic is displayed in.
-	GameWindow getWindow() { return panel.getWindow(); } // The window this game('s panel) is displayed in.
+	/**
+	 * The parent <code>JPanel</code> in which this <code>Tetris</code> is displayed in.
+	 * (TODO: The {@link Main} <code>class</code> should know the Game Logic
+	 * <code>class</code>es and the Visual <code>class</code>es. They shouldn't know
+	 * anything about each other.)
+	 **/
+	GamePanel panel; 
 	
 	
 	// INITIALISING
 	
 	/**
 	 * Initialises the Game and sets the speed and the number of rows.
+	 * 
+	 * @param panel  the GamePanel this game is displayed in (TODO: replace with Main method)
+	 * @param speed  the game's {@link speed}
+	 * TODO:
 	 **/
-	public Tetris (GamePanel panel, float speed, int rowCountX, int rowCountY) {
+	public Tetris (GamePanel panel, float speed, int rows, int columns) {
 		this.panel = panel;
 		
-		this.rowCountX = rowCountX;
-		this.rowCountY = rowCountY;
+		this.rows = rows;
+		this.columns = columns;
 		this.speed = speed;
 		this.initialSpeed = speed;
 		
-		gameBoard = new Piece[rowCountX][rowCountY];
+		gameBoard = new Piece[rows][columns];
 		
 		updateTimer = new Timer((int)(1000/speed), this);
-		updateTimer.setInitialDelay(0);
 
 		startGame();
 		
@@ -87,7 +129,9 @@ public class Tetris implements ActionListener, KeyListener {
 	 **/
 	public void restartGame() {
 		panel.restartGame();
-		gameBoard = new Piece[rowCountX][rowCountY];
+		gameBoard = new Piece[rows][columns];
+		currentShape = null;
+		nextShape = null;
 		currentScore = 0;
 		speed = initialSpeed;
 		gameOver = false;
@@ -99,7 +143,7 @@ public class Tetris implements ActionListener, KeyListener {
 	 * Ends the game and goes back to the Start Screen.
 	 **/
 	public void endGame() {
-		getWindow().endGame();
+		panel.getWindow().endGame();
 		System.out.println("ENDGAME");
 	}
 	
@@ -107,21 +151,17 @@ public class Tetris implements ActionListener, KeyListener {
 	// TIMER EVENT
 	
 	/**
-	 * This gets called every time the timer is at 0 and is responsible for the game flow.
+	 * Responsible for the game flow.
+	 * Gets called every time the timer is at 0. 
 	 **/
 	public void actionPerformed (ActionEvent e) {
-		
-		// TODO: Either move the current piece down one row or if it already is down then create a new shape.
-		//		 If the creation of the shape isn't possible the game is over.
 				
-		if (currentPieces == null) {
+		if (currentShape == null) {
 			recalcSpeed();
 			checkFullRows();
 			generateNewShape();
-		} else if (canDropDownOne()) {
-			dropDownOne();
 		} else {
-			placeCurrentPieces();
+			currentShape.dropDownOne();
 		}
 		
 		//System.out.println("actionPerformed!");
@@ -133,7 +173,7 @@ public class Tetris implements ActionListener, KeyListener {
 	 * Recalculates the speed with the score.
 	 */
 	void recalcSpeed() {
-		speed = ((currentScore / 4) * 0.5f) + initialSpeed;
+		speed = ((currentScore / linesPerLevel) * speedRaisePerLevel) + initialSpeed;
 		updateTimer.setDelay((int)(1000/speed));
 	}
 	
@@ -144,35 +184,19 @@ public class Tetris implements ActionListener, KeyListener {
 	 * This generates new Pieces according to the next Shape at the top of the board at a random x position.
 	 */
 	void generateNewShape() {
-		
-		// TODO: Check if full! => GameOver
+	
 		if (nextShape == null) {
 			generateNextShape();
 		}
-		
-		// Create a new Shape with the Prototype
 		currentShape = nextShape;
-		// Set a random position
-		int posX = (int)(Math.random() * (rowCountX - currentShape.getWidth() + 1));
-		currentPieces = new Piece[currentShape.getPositions().length];
-		for (int i = 0; i < currentPieces.length; i++) {
-			currentPieces[i] = new Piece(currentShape.getPositions()[i], currentShape.color, currentShape);
-			currentPieces[i].position.x += posX;
-			if (gameBoard[currentPieces[i].position.x][currentPieces[i].position.y] != null) {
-				currentPieces = null;
-				doGameOver();
-				return;
-			}
-			//System.out.println("Generated new Piece at (" + currentShape.getPositions()[i].x + "/" + currentShape.getPositions()[i].y + ")");
+		
+		if (currentShape.checkGameOver()) {
+			doGameOver();
+			return;
 		}
 		
-		/*// Moves the tile into the middle -- unused
-		for (int i = 0; i < ((rowCountX/2) - (currentShape.getWidth()/2)); i++) {
-			tryMoveRight();
-		}*/
+		generateNextShape();	
 		
-		generateNextShape();
-				
 		//System.out.println("generatedNewShape");
 		
 	}
@@ -181,55 +205,10 @@ public class Tetris implements ActionListener, KeyListener {
 	 * Generates a new Random Shape for the next Shape.
 	 **/
 	void generateNextShape() {
-		nextShape = Shape.getRandomShape();
+		nextShape = ShapePrototypes.getRandomShape(this);
 	}
 	
-	/**
-	 * Drops the current Pieces down one row, if there is nothing below all of them.
-	 * Returns true if succeeded, false if the space below is already occupied.
-	 * Uses canDropDownOne() to see, if the spaces below are occupied.
-	 **/
-	boolean dropDownOne() {
-		if (canDropDownOne()) {
-			for (int i = 0; i < currentPieces.length; i++) {
-				currentPieces[i].position.y += 1;
-			}
-			//System.out.println("droppedDownOne");
-			return true;
-		} else {
-			return false;
-		}
-	}
 	
-	/**
-	 * Returns true if the space below all the current pieces is free, false if at least on of the spaces below is already occupied.
-	 **/
-	boolean canDropDownOne() {
-		for (int i = 0; i < currentPieces.length; i++) {
-			if (isPositionOccupied(currentPieces[i].position.x, currentPieces[i].position.y + 1)) {
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	/**
-	 * This Method gets called, when a Piece can't drop any further.
-	 * It puts the Piece at it's current position into the gameBoard.
-	 * Afterwards there should always be a call to generate a new Piece!
-	 **/
-	void placeCurrentPieces() {
-		for (int i = 0; i < currentPieces.length; i++) {
-			Vector2 v = currentPieces[i].position;
-			if (gameBoard[v.x][v.y] != null) {
-				//doGameOver();
-				System.out.println("Tetris::placeCurrentPieces -- ERROR: There is already a Piece, where the current should be placed!\nProbably the canDropDownOne check went wrong or Game Over didn't work.");
-			}
-			gameBoard[v.x][v.y] = currentPieces[i];
-		}
-		currentPieces = null;
-		//System.out.println("placedCurrentPieces");
-	}
 	
 	/**
 	 * Checks all rows and deletes them if they are full with deleteRow().
@@ -237,14 +216,14 @@ public class Tetris implements ActionListener, KeyListener {
 	void checkFullRows() {
 		
 		// Check each y row.
-		for (int y = 0; y < rowCountY; y++) {
+		for (int y = 0; y < columns; y++) {
 			boolean full = true;
 			// Check each x in the y rows.
-			for (int x = 0; x < rowCountX; x++) {
+			for (int x = 0; x < rows; x++) {
 				// If one x isn't occupied, the y row isn't full and we can jump to the next y loop
 				if (isPositionOccupied(x, y) == false) {
 					full = false;
-					break; // TOCHECK: Does this end the x loop or the if statement? Probably the x loop. Wouldn't matter anyway, only slightly for performance. Better: continue the y loop with the next y, so we don't have to declare the boolean variable.
+					break;
 				}
 			}
 			if (full) {
@@ -261,7 +240,7 @@ public class Tetris implements ActionListener, KeyListener {
 	 * Deletes the specified y row and drops all the pieces above by one.
 	 **/
 	void deleteRow(int y) {
-		for (int x = 0; x < rowCountX; x++) {
+		for (int x = 0; x < rows; x++) {
 			// Delete every piece in the y row.
 			gameBoard[x][y] = null;
 			
@@ -282,6 +261,8 @@ public class Tetris implements ActionListener, KeyListener {
 	void doGameOver() {
 		updateTimer.stop();
 		gameOver = true;
+		currentShape = null;
+		nextShape = null;
 		panel.doGameOver();
 	}
 	
@@ -315,7 +296,7 @@ public class Tetris implements ActionListener, KeyListener {
 			return;
 		}
 		
-		if (paused) {
+		if (isPaused) {
 			return;
 		}
 		
@@ -324,29 +305,27 @@ public class Tetris implements ActionListener, KeyListener {
 			return;
 		}
 		
-		if (currentPieces == null) {
+		if (currentShape == null) {
 			return;
 		}
 		
 		switch(e.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
-				tryMoveLeft();
+				currentShape.tryMoveLeft();
 				break;
 			case KeyEvent.VK_RIGHT:
-				tryMoveRight();
+				currentShape.tryMoveRight();
 				break;
 			case KeyEvent.VK_DOWN:
-				//dropDownOne(); // drop down one row
-				updateTimer.restart();
+				currentShape.dropDownOne(); // drop down one row
+				//updateTimer.restart();
 				break;
 			case KeyEvent.VK_SPACE:
-				while(dropDownOne()) {} // drop down to the bottom.
-				updateTimer.restart();	// Set the Timer to 0, so the Piece get's added to the board immediately and can't be moved anymore.
+				while(currentShape.dropDownOne()) {} // drop down to the bottom.
+				//updateTimer.restart();	// Set the Timer to 0, so the Piece get's added to the board immediately and can't be moved anymore.
 				break;
 			case KeyEvent.VK_UP:
-				if (canRotateClockwise90()) {
-					rotateClockwise90();
-				}
+				currentShape.rotate();
 				break;
 			default:
 				// Non-relevant Key Pressed. Ignore.
@@ -361,8 +340,8 @@ public class Tetris implements ActionListener, KeyListener {
 	 * Pauses the game.
 	 **/
 	void pauseGame() {
-		paused = !paused;
-		if (paused) {
+		isPaused = !isPaused;
+		if (isPaused) {
 			updateTimer.stop();
 		} else {
 			updateTimer.start();
@@ -370,106 +349,18 @@ public class Tetris implements ActionListener, KeyListener {
 		panel.changePauseLabel();
 	}
 	
-	/**
-	 * Moves all the Pieces of the Shape to the left if the canMoveLeft methods returns true.
-	 **/
-	boolean tryMoveLeft() {
-		if (canMoveLeft()) {
-			for (int i = 0; i < currentPieces.length; i++) {
-				currentPieces[i].position.x -= 1;
-			}
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	/**
-	 * Checks whether all the pieces of the Shape can move left.
-	 **/
-	boolean canMoveLeft() {
-		for (int i = 0; i < currentPieces.length; i++) {
-			if (isPositionOccupied(currentPieces[i].position.x - 1, currentPieces[i].position.y)) {
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	/**
-	 * Moves all the Pieces of the Shape to the right if the canMoveRight methods returns true.
-	 **/
-	boolean tryMoveRight() {
-		if (canMoveRight()) {
-			for (int i = 0; i < currentPieces.length; i++) {
-				currentPieces[i].position.x += 1;
-			}
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	/**
-	 * Checks whether all the pieces of the Shape can move right.
-	 **/
-	boolean canMoveRight() {
-		for (int i = 0; i < currentPieces.length; i++) {
-			if (isPositionOccupied(currentPieces[i].position.x + 1, currentPieces[i].position.y)) {
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	
-	/**
-	 * Rotates the currentPieces by 90° around the middle in clockwise direction.
-	 **/
-	void rotateClockwise90() {
-		if (currentShape.isRotateable == false) return;
-		
-		int middleY = currentPieces[0].position.y;
-		int middleX = currentPieces[0].position.x;
-		
-		for (int i = 1; i < currentPieces.length; i++) {
-			int newX = middleX - (currentPieces[i].position.y - middleY);
-			int newY = (middleY + currentPieces[i].position.x) - middleX;
-			currentPieces[i].position.y = newY;
-			currentPieces[i].position.x = newX;
-		}
-		
-	}
-	
-	/**
-	 * Checks to see if the rotation is possible.
-	 **/
-	boolean canRotateClockwise90() {
-		if (currentShape.isRotateable == false) return false;
-		
-		int middleY = currentPieces[0].position.y;
-		int middleX = currentPieces[0].position.x;
-		
-		for (int i = 1; i < currentPieces.length; i++) {
-			int newX = middleX - (currentPieces[i].position.y - middleY);
-			int newY = (middleY + currentPieces[i].position.x) - middleX;
-			if (isPositionOccupied(newX, newY)) {
-				System.out.println("canRotateClockwise90 -- Rotation impossible, position (" + newX + "/" + newY + ") is already occupied!");
-				return false;
-			}
-		}
-		return true;
-	}
 	
 	
 	// GAME BOARD METHODS
 	
 	/**
-	 * Checks if the position (x, y) is occupied with a static piece (not the falling Pieces).
+	 * Checks if the position (x, y) is occupied
+	 * Only static pieces count, not the falling Pieces from the current Shape.
+	 * All the positions outside the game Board count as occupied.
 	 **/
 	public boolean isPositionOccupied(int x, int y) {
-		if (x >= rowCountX || x < 0 || y >= rowCountY || y < 0) {
-			return true; // The borders count like occupied fields for this method
+		if (x >= rows || x < 0 || y >= columns || y < 0) {
+			return true;
 		}
 		if (gameBoard[x][y] != null) {
 			return true;
@@ -488,6 +379,25 @@ public class Tetris implements ActionListener, KeyListener {
 		} else {
 			return gameBoard[x][y];
 		}
+	}
+	
+	// TODO: Check which (protected?) allows only access inside same package.
+	boolean setPieceAt(int x, int y, Piece p) {
+		if (isPositionOccupied(x, y)) {
+			System.out.println("Tetris::getPieceAt -- ERROR: Trying to set a piece where one already exists.");
+			return false;
+		} else {
+			gameBoard[x][y] = p;
+			return true;
+		}
+	}
+	
+	/**
+	 * Sets the current Shape to null.
+	 * In the next Timer update the next Shape will be set to the current Shape.
+	 **/
+	public void resetCurrentShape() {
+		currentShape = null;
 	}
 	
 }

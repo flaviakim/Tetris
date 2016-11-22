@@ -5,133 +5,207 @@ import java.awt.Color;
 import java.util.Random;
 import java.util.Collections.*;
 
-public enum Shape {
-	
-	// SHAPES
-	
-	I_SHAPE		(new Vector2[]{new Vector2(1,0), new Vector2(0,0), new Vector2(2,0), new Vector2(3,0)}, new Color (204, 102, 102), true),
-	L_SHAPE		(new Vector2[]{new Vector2(1,1), new Vector2(0,1), new Vector2(2,1), new Vector2(2,0)}, new Color (102, 204, 102), true),
-	J_SHAPE		(new Vector2[]{new Vector2(1,1), new Vector2(0,0), new Vector2(0,1), new Vector2(2,1)}, new Color (102, 102, 204), true),
-	S_SHAPE		(new Vector2[]{new Vector2(1,1), new Vector2(0,1), new Vector2(1,0), new Vector2(2,0)}, new Color (204, 204, 102), true),
-	T_SHAPE		(new Vector2[]{new Vector2(1,1), new Vector2(0,1), new Vector2(2,1), new Vector2(1,0)}, new Color (204, 102, 204), true),
-	Z_SHAPE		(new Vector2[]{new Vector2(1,1), new Vector2(0,0), new Vector2(1,0), new Vector2(2,1)}, new Color (102, 204, 204), true),
-	O_SHAPE		(new Vector2[]{new Vector2(0,0), new Vector2(0,1), new Vector2(1,0), new Vector2(1,1)}, new Color (102, 102, 102), false);
+public class Shape {
 	
 	// PROPERTIES
 	
-	private static final Shape[] VALUES = values();
-	private static final int SIZE = VALUES.length;
-	private static final Random RANDOM = new Random();
+	ShapePrototypes prototype;
+	public ShapePrototypes getPrototype() { return prototype; }
+	Tetris game;
 	
-	Vector2[] positions; // TODO The first position should be the center piece. So we can rotate around it.
-	public Vector2[] getPositions() { return positions; }
+	Piece[] pieces;
+	public Piece[] getPieces() { return pieces; }
+	
 	boolean isRotateable;
-	Color color;
+	
 	
 	// INITIALIZING
 	
-	Shape(Vector2[] positions, Color color, boolean isRotateable) {
-		this.positions = new Vector2[positions.length];
-		for (int i = 0; i < positions.length; i++) {
-			this.positions[i] = new Vector2 (positions[i].x, positions[i].y);
-		} 
-		this.color = color;
-		this.isRotateable = isRotateable;
+	/**
+	 * Generates a new Shape in the middle of the {@link gameBoard}.
+	 **/
+	public Shape (ShapePrototypes prototype, Tetris game) {
+		this.prototype = prototype;
+		this.game = game;
+		
+		pieces = new Piece[prototype.getPositions().length];
+		for (int i = 0; i < pieces.length; i++) {
+			Vector2 position = new Vector2 (prototype.getPositions()[i].x, prototype.getPositions()[i].y);
+			position.x += game.getRows()/2 - prototype.getStartWidth()/2;
+			pieces[i] = new Piece(position, prototype.getColor(), this);
+		}
+				
+		isRotateable = prototype.getIsRotateable();
+				
 	}
+	
 	
 	// METODS
 	
-	public static Shape getRandomShape() {
-		return VALUES[RANDOM.nextInt(SIZE)];
+	/**
+	 * Rotates this Shape by 90° around the middle in clockwise direction.
+	 **/
+	public boolean rotate () {
+		if (isRotateable == false) return false;
+		if (canRotate() == false) return false;
+		
+		int middleY = pieces[0].position.y;
+		int middleX = pieces[0].position.x;
+		
+		for (int i = 1; i < pieces.length; i++) {
+			int newX = middleX - (pieces[i].position.y - middleY);
+			int newY = (middleY + pieces[i].position.x) - middleX;
+			pieces[i].position.y = newY;
+			pieces[i].position.x = newX;
+		}
+		return true;
 	}
 	
 	/**
-	 * The Width in Pieces of this Shape
+	 * Checks to see if the rotation of this Shape is possible.
 	 **/
-	public int getWidth() {
-		int rightmostX = 0;
-		for (int i = 0; i < positions.length; i++) {
-			if (positions[i].x > rightmostX) {
-				rightmostX = positions[i].x;
+	boolean canRotate() {
+		if (isRotateable == false) return false;
+		
+		int middleY = pieces[0].position.y;
+		int middleX = pieces[0].position.x;
+		
+		for (int i = 1; i < pieces.length; i++) {
+			int newX = middleX - (pieces[i].position.y - middleY);
+			int newY = (middleY + pieces[i].position.x) - middleX;
+			if (game.isPositionOccupied(newX, newY)) {
+				System.out.println("canRotate -- Rotation impossible, position (" + newX + "/" + newY + ") is already occupied!");
+				return false;
 			}
 		}
-		//System.out.println("rightmostX: " + rightmostX);
-		return rightmostX + 1;
+		return true;
+	}
+	
+	/** Drops the current Shape by one or places it on the Game Board.
+	 * Drops the current Pieces down one row, if there is nothing below all of them.
+	 * Returns true if succeeded, false if the space below is already occupied.
+	 * Uses canDropDownOne() to see, if the spaces below are occupied.
+	 * If canDropDownOne() failed the Shape gets placed.
+	 **/
+	public boolean dropDownOne() {
+		if (canDropDownOne() == false) {
+			placeShape();
+			return false;
+		}
+		
+		for (int i = 0; i < pieces.length; i++) {
+			pieces[i].position.y += 1;
+		}
+		//System.out.println("droppedDownOne");
+		return true;
 	}
 	
 	/**
-	 * The Height in Pieces of this Shape
+	 * Returns true if the space below all the current pieces is free,
+	 * false if at least on of the spaces below is already occupied.
 	 **/
-	public int getHeight() {
-		int lowestY = 0;
-		for (int i = 0; i < positions.length; i++) {
-			if (positions[i].y > lowestY) {
-				lowestY = positions[i].y;
+	boolean canDropDownOne() {
+		for (int i = 0; i < pieces.length; i++) {
+			if (game.isPositionOccupied(pieces[i].position.x, pieces[i].position.y + 1)) {
+				return false;
 			}
 		}
-		//System.out.println("lowestY: " + lowestY);
-		return lowestY + 1;
+		return true;
 	}
 	
 	/**
-	 * The Width in Pieces of the given array of Pieces.
+	 * This Method gets called, when a Piece can't drop any further.
+	 * It puts the Piece at it's current position into the gameBoard.
+	 * Afterwards there should always be a call to generate a new Piece!
 	 **/
-	public static int getWidth(Piece[] pieces) {
-		
-		int leftmostX = getLeftmostPiece(pieces).position.x;
-		int rightmostX = getRightmostPiece(pieces).position.x;
-		
-		return rightmostX - leftmostX + 1;
+	void placeShape() {
+		for (int i = 0; i < pieces.length; i++) {
+			Vector2 v = pieces[i].position;
+			if (game.isPositionOccupied(v.x, v.y)) {
+				System.out.println("Tetris::placeCurrentPieces -- ERROR: There is already a Piece, where the current should be placed!\nProbably the canDropDownOne check went wrong or Game Over didn't work.");
+			}
+			game.setPieceAt(v.x, v.y, pieces[i]);
+		}
+		pieces = null;
+		game.resetCurrentShape();
+		game.checkFullRows();
+		//System.out.println("placedCurrentPieces");
 	}
 	
 	/**
-	 * The Height in Pieces of the given array of Pieces.
+	 * Moves all the Pieces of the Shape to the right if the canMoveRight methods returns true.
 	 **/
-	public static int getHeight(Piece[] pieces) {
-		
-		int highestY = getHighestPiece(pieces).position.y;
-		int lowestY = getLowestPiece(pieces).position.y;
-		
-		return lowestY - highestY + 1;
+	public boolean tryMoveRight() {
+		if (canMoveRight() == false) return false;
+		for (int i = 0; i < pieces.length; i++) {
+			pieces[i].position.x += 1;
+		}
+		return true;
+	
 	}
 	
-	public static Piece getHighestPiece(Piece[] pieces) {
-		Piece highestPiece = pieces[0];
-		for (int i = 1; i < pieces.length; i++) {
-			if (pieces[i].position.y < highestPiece.position.y) {
-				highestPiece = pieces[i];
+	/**
+	 * Checks whether all the pieces of the Shape can move right.
+	 **/
+	boolean canMoveRight() {
+		for (int i = 0; i < pieces.length; i++) {
+			if (game.isPositionOccupied(pieces[i].position.x + 1, pieces[i].position.y)) {
+				return false;
 			}
 		}
-		return highestPiece;
+		return true;
 	}
 	
-	public static Piece getLowestPiece(Piece[] pieces) {
-		Piece lowestPiece = pieces[0];
-		for (int i = 1; i < pieces.length; i++) {
-			if (pieces[i].position.y > lowestPiece.position.y) {
-				lowestPiece = pieces[i];
-			}
+	/**
+	 * Moves all the Pieces of the Shape to the right if the canMoveRight methods returns true.
+	 **/
+	public boolean tryMoveLeft() {
+		if (canMoveLeft() == false) return false;
+		for (int i = 0; i < pieces.length; i++) {
+			pieces[i].position.x -= 1;
 		}
-		return lowestPiece;
+		return true;
+	
 	}
 	
-	public static Piece getLeftmostPiece(Piece[] pieces) {
-		Piece leftmostPiece = pieces[0];
-		for (int i = 1; i < pieces.length; i++) {
-			if (pieces[i].position.x < leftmostPiece.position.x) {
-				leftmostPiece = pieces[i];
+	/**
+	 * Checks whether all the pieces of the Shape can move right.
+	 **/
+	boolean canMoveLeft() {
+		for (int i = 0; i < pieces.length; i++) {
+			if (game.isPositionOccupied(pieces[i].position.x - 1, pieces[i].position.y)) {
+				return false;
 			}
 		}
-		return leftmostPiece;
+		return true;
 	}
 	
-	public static Piece getRightmostPiece(Piece[] pieces) {
-		Piece rightmostPiece = pieces[0];
-		for (int i = 1; i < pieces.length; i++) {
-			if (pieces[i].position.x > rightmostPiece.position.x) {
-				rightmostPiece = pieces[i];
-			}
+	/**
+	 * Checks whether the game is over.
+	 * The game is over when this <code>Shape</code>'s position is already occupied.
+	 * Should only be called when the Shape is created.
+	 * 
+	 * @return returns <code>true</code> if the game is over, <code>false</code> otherwise.
+	 **/
+	public boolean checkGameOver() {
+		for (Piece p : pieces) {
+			if (game.isPositionOccupied(p.position.x, p.position.y)) return true;
 		}
-		return rightmostPiece;
-	}	
+		return false;
+	}
+	
+	
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+

@@ -16,13 +16,6 @@ public class GameWindow extends JFrame {
     // PROPERTIES
 
     GamePanel gamePanel;
-    public Tetris getCurrentGame() {	// Not currently used. But maybe later, when showing different JPanels in this GameWindow which need to know Game Logic stuff (like the score). Maybe make them in the GamePanel. But then the window size has to be resized by the GamePanel.
-        if (gamePanel == null) {
-        	return null;
-        }
-        return gamePanel.getGame();
-    }
-
     StartScreenPanel startScreenPanel;
 
 
@@ -31,8 +24,7 @@ public class GameWindow extends JFrame {
     public GameWindow(int width, int height) {
 
         //TODO: Add Score Label
-        //TODO: Add Start Screen instead of starting immediately (a different Panel than the GamePanel, only create GamePanel when pressed play)
-
+		
         this.setSize(width, height);
         setTitle("Tetris");
         setVisible(true);
