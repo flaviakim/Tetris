@@ -376,6 +376,7 @@ public class Tetris implements ActionListener, KeyListener {
 				updateTimer.restart();
 				break;
 			case KeyEvent.VK_SPACE:
+				if (currentShape.canDropDownOne() == false) return; // So the timer doesn't get continuously reset while  holding space.
 				while(currentShape.canDropDownOne()) {currentShape.dropDownOne();} // drop down to the bottom.
 				updateTimer.restart();
 				break;
