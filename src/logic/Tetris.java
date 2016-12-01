@@ -124,11 +124,11 @@ public class Tetris implements ActionListener, KeyListener {
 	 * @param speed  the game's {@link speed}
 	 * TODO:
 	 **/
-	public Tetris (GamePanel panel, float speed) {
+	public Tetris (GamePanel panel, Difficulty difficulty) {
 		this.panel = panel;
 		
-		this.speed = speed;
-		this.initialSpeed = speed;
+		this.speed = difficulty.initialSpeed;
+		this.initialSpeed = difficulty.initialSpeed;
 		
 		gameBoard = new Piece[rows][columns];
 		
@@ -180,7 +180,6 @@ public class Tetris implements ActionListener, KeyListener {
 	public void actionPerformed (ActionEvent e) {
 				
 		if (currentShape == null) {
-			System.out.println("currentShape == null");
 			recalcSpeed();
 			checkFullRows();
 			generateNewShape();
@@ -374,7 +373,7 @@ public class Tetris implements ActionListener, KeyListener {
 				break;
 			case KeyEvent.VK_DOWN:
 				currentShape.dropDownOne(); // drop down one row
-				//updateTimer.restart();
+				updateTimer.restart();
 				break;
 			case KeyEvent.VK_SPACE:
 				while(currentShape.canDropDownOne()) {currentShape.dropDownOne();} // drop down to the bottom.

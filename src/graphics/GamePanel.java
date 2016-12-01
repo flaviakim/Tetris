@@ -29,10 +29,11 @@ public class GamePanel extends JPanel {
 
     // INITIALIZING
 
-    public GamePanel (GameWindow window, float speed) {
+    public GamePanel (GameWindow window, Difficulty difficulty) {
         this.window = window;
+        this.useDroppedShape = difficulty.droppedShapePreview;
 
-        game = new Tetris(this, speed);
+        game = new Tetris(this, difficulty);
 
         setPreferredSize(new Dimension((int)window.getSize().getWidth(), game.getGameHeight()));
 

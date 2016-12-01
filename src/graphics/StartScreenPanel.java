@@ -23,9 +23,7 @@ import java.awt.event.ActionListener;
 class StartScreenPanel extends JPanel implements KeyListener, ActionListener {
 
     // PROPERTIES
-    
-	static final float[] speeds = {1f, 2f, 4f};
-	
+    	
 	/**
 	 * The parent window in which this GamePanel is in.
 	 */
@@ -87,13 +85,13 @@ class StartScreenPanel extends JPanel implements KeyListener, ActionListener {
     public void keyPressed(KeyEvent e) {
         switch(e.getKeyCode()) {
             case KeyEvent.VK_1:
-                startGame(speeds[0]);
+			startGame(Difficulty.EASY);
                 break;
             case KeyEvent.VK_2:
-                startGame(speeds[1]);
+			startGame(Difficulty.MEDIUM);
                 break;
             case KeyEvent.VK_3:
-                startGame(speeds[2]);
+			startGame(Difficulty.HARD);
                 break;
             case KeyEvent.VK_SPACE:
                 // TODO: enable/disable dopped Shape. 
@@ -109,13 +107,13 @@ class StartScreenPanel extends JPanel implements KeyListener, ActionListener {
 	@Override
 	public void actionPerformed (ActionEvent e) {
 		if (e.getSource() == playButtons[0]) {
-			startGame(speeds[0]);
+			startGame(Difficulty.EASY);
 		} else
 		if (e.getSource() == playButtons[1]) {
-			startGame(speeds[1]);
+			startGame(Difficulty.MEDIUM);
 		} else
 		if (e.getSource() == playButtons[2]) {
-			startGame(speeds[2]);
+			startGame(Difficulty.HARD);
 		}
 		
 	}
@@ -125,8 +123,8 @@ class StartScreenPanel extends JPanel implements KeyListener, ActionListener {
 	
 	// MISC METHODS
 
-    private void startGame(float speed) {
-        window.startGame(speed);
+    private void startGame(Difficulty difficulty) {
+        window.startGame(difficulty);
     }
 
 

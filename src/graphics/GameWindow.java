@@ -54,12 +54,12 @@ public class GameWindow extends JFrame {
 
     // METHODS
 
-    void startGame(float speed) {
+    void startGame(Difficulty difficulty) {
         startScreenPanel.setEnabled(false);
         container.remove(startScreenPanel);
         startScreenPanel = null;
 
-        gamePanel = new GamePanel(this, speed);
+        gamePanel = new GamePanel(this, difficulty);
         gameInfoPanel = new GameInformationPanel(this);
         
         container.add(gamePanel);
