@@ -183,8 +183,6 @@ public class GamePanel extends JPanel {
         g.drawLine(lastPixelX, firstPixelY + 1, lastPixelX, lastPixelY - 1);	// top right to (bottom-1) right
         g.drawLine(firstPixelX + 1, lastPixelY, lastPixelX, lastPixelY);	// bottom (left+1) to bottom right
 
-        //System.out.println("Single Piece drawn at: (" + x + ", " + y + ")");
-
     }
     
     void drawSinglePiece (Graphics g, int x, int y, Color c) {

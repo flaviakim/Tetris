@@ -67,6 +67,7 @@ public class GameInformationPanel extends JPanel {
     }
     
     void drawNextShape(Graphics g) {
+    	if (window.getGamePanel().getGame().getNextShape() == null) return;
     	ShapePrototypes nextShape = window.getGamePanel().getGame().getNextShape().getPrototype();
     	for (Vector2 pos : nextShape.getPositions()) {
     		drawSinglePiece (g, pos.x, pos.y, nextShape.getColor());
