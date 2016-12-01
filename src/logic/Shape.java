@@ -11,6 +11,7 @@ public class Shape {
 	
 	final ShapePrototypes prototype;
 	public ShapePrototypes getPrototype() { return prototype; }
+	
 	final Tetris game;
 	
 	Piece[] pieces;
@@ -104,7 +105,7 @@ public class Shape {
 	 * Returns true if the space below all the current pieces is free,
 	 * false if at least on of the spaces below is already occupied.
 	 **/
-	boolean canDropDownOne() {
+	public boolean canDropDownOne() {
 		for (int i = 0; i < pieces.length; i++) {
 			if (game.isPositionOccupied(pieces[i].position.x, pieces[i].position.y + 1)) {
 				return false;

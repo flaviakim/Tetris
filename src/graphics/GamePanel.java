@@ -24,6 +24,8 @@ public class GamePanel extends JPanel {
 
     JLabel gameOverLabel;
     JLabel pauseLabel;
+    
+    boolean useDroppedShape = true;
 
     // INITIALIZING
 
@@ -90,7 +92,9 @@ public class GamePanel extends JPanel {
         Shape currentShape = game.getCurrentShape();
         if (currentShape != null) {
             paintCurrentShape(g, currentShape);
-            paintDroppedShape(g, currentShape, currentShape.numberOfPossibleDrops());
+            if (useDroppedShape) {
+            	paintDroppedShape(g, currentShape, currentShape.numberOfPossibleDrops());
+            }
         }
         
     }
@@ -187,11 +191,6 @@ public class GamePanel extends JPanel {
     	drawSinglePiece  (g, x, y, c, false);
     }
     
-    
-    void drawScore (Graphics g) {
-    	int score = game.getCurrentScore();
-    	
-    }
     
     
     

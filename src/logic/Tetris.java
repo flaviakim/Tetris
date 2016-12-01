@@ -98,7 +98,7 @@ public class Tetris implements ActionListener, KeyListener {
 	/**
 	 * How many lines does the player have to delete to get to the next <code>level</code>.
 	 **/
-	final int linesPerLevel = 2;
+	final int linesPerLevel = 5;
 	
 	/**
 	 * The current score which is calculated by speed and lines removed.
@@ -377,8 +377,8 @@ public class Tetris implements ActionListener, KeyListener {
 				//updateTimer.restart();
 				break;
 			case KeyEvent.VK_SPACE:
-				while(currentShape.dropDownOne()) {} // drop down to the bottom.
-				//updateTimer.restart();	// Set the Timer to 0, so the Piece get's added to the board immediately and can't be moved anymore.
+				while(currentShape.canDropDownOne()) {currentShape.dropDownOne();} // drop down to the bottom.
+				updateTimer.restart();
 				break;
 			case KeyEvent.VK_UP:
 				currentShape.rotate();

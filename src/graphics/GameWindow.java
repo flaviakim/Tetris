@@ -17,7 +17,7 @@ public class GameWindow extends JFrame {
 
     // PROPERTIES
     
-    public static final int gameInfoPanelHeight = 50;
+    public static final int gameInfoPanelHeight = 40;
     
     JPanel container;
     GamePanel gamePanel;
