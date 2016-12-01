@@ -1,29 +1,30 @@
 package graphics;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
+
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
 import java.net.URL;
 
-import java.awt.Color;
-import java.awt.Graphics;
-
+import javax.swing.*;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 class StartScreenPanel extends JPanel implements KeyListener, ActionListener {
 
     // PROPERTIES
     
-	final float[] speeds = {1f, 2f, 4f};
+	static final float[] speeds = {1f, 2f, 4f};
 	
 	/**
 	 * The parent window in which this GamePanel is in.
@@ -47,10 +48,9 @@ class StartScreenPanel extends JPanel implements KeyListener, ActionListener {
     StartScreenPanel(GameWindow window) throws Exception {
         this.window = window;
 
-        window.getContentPane().add(this);
+        //window.getContentPane().add(this);
         addKeyListener(this);
         setFocusable(true);
-        requestFocusInWindow();
         setVisible(true);
 	
 		setBorder(new EmptyBorder(15, 30, 15, 30));
@@ -73,6 +73,8 @@ class StartScreenPanel extends JPanel implements KeyListener, ActionListener {
 		}
 		
         // TODO: Add Button/Checkbox for enabling/disabling dropped Shape.
+        
+        repaint();
         
     }
 
@@ -117,6 +119,8 @@ class StartScreenPanel extends JPanel implements KeyListener, ActionListener {
 		}
 		
 	}
+	
+	
 	
 	
 	// MISC METHODS

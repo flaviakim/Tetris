@@ -16,11 +16,11 @@ public class Tetris implements ActionListener, KeyListener {
 	
 	// PROPERTIES
 	
-	final int rows;
-	public int getRows() { return rows; }
+	static final int rows = 10;
+	public static int getRows() { return rows; }
 	
-	final int columns;
-	public int getColumns() { return columns; }
+	static final int columns = 20;
+	public static int getColumns() { return columns; }
 		
 	/**
 	 * The width of the game. Defined by the size of the window.
@@ -93,14 +93,15 @@ public class Tetris implements ActionListener, KeyListener {
 	 * gain per level.
 	 **/
 	int level = 1;
+	public int getLevel() { return level; }
 	
 	/**
 	 * How many lines does the player have to delete to get to the next <code>level</code>.
 	 **/
-	final int linesPerLevel = 5;
+	final int linesPerLevel = 2;
 	
 	/**
-	 * The current score is calculated by speed and lines removed.
+	 * The current score which is calculated by speed and lines removed.
 	 **/
 	int currentScore = 0;
 	public int getCurrentScore() { return currentScore; }
@@ -123,11 +124,9 @@ public class Tetris implements ActionListener, KeyListener {
 	 * @param speed  the game's {@link speed}
 	 * TODO:
 	 **/
-	public Tetris (GamePanel panel, float speed, int rows, int columns) {
+	public Tetris (GamePanel panel, float speed) {
 		this.panel = panel;
 		
-		this.rows = rows;
-		this.columns = columns;
 		this.speed = speed;
 		this.initialSpeed = speed;
 		
@@ -166,6 +165,7 @@ public class Tetris implements ActionListener, KeyListener {
 	 * Ends the game and goes back to the Start Screen.
 	 **/
 	public void endGame() {
+		updateTimer.stop();
 		panel.getWindow().endGame();
 		System.out.println("ENDGAME");
 	}
@@ -180,6 +180,7 @@ public class Tetris implements ActionListener, KeyListener {
 	public void actionPerformed (ActionEvent e) {
 				
 		if (currentShape == null) {
+			System.out.println("currentShape == null");
 			recalcSpeed();
 			checkFullRows();
 			generateNewShape();
@@ -187,16 +188,17 @@ public class Tetris implements ActionListener, KeyListener {
 			currentShape.dropDownOne();
 		}
 		
-		//System.out.println("actionPerformed!");
 		panel.repaint();
-		
+		panel.getWindow().getGameInfoPanel().repaint();
 	}
 	
 	/**
 	 * Recalculates the speed with the score.
 	 */
 	void recalcSpeed() {
-		speed = ((currentScore / linesPerLevel) * speedRaisePerLevel) + initialSpeed;
+		level = (linesDeleted / linesPerLevel) + 1;
+		speed = ((level - 1) * speedRaisePerLevel) + initialSpeed;
+		//System.out.println("level: " + level + "; speed: " + speed + "; linesDeleted: " + linesDeleted + "; speedRaisePerLevel: " + speedRaisePerLevel + "; linesPerLevel: " + linesPerLevel);
 		updateTimer.setDelay((int)(1000/speed));
 	}
 	
@@ -251,6 +253,7 @@ public class Tetris implements ActionListener, KeyListener {
 			}
 			if (full) {
 				deleteRow(y);
+				linesDeleted++;
 				deletedRows++;
 			}
 		}

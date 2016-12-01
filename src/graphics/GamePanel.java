@@ -27,17 +27,17 @@ public class GamePanel extends JPanel {
 
     // INITIALIZING
 
-    public GamePanel (GameWindow window, float speed, int rows, int columns) {
+    public GamePanel (GameWindow window, float speed) {
         this.window = window;
 
-        game = new Tetris(this, speed, rows, columns);
+        game = new Tetris(this, speed);
 
         setPreferredSize(new Dimension((int)window.getSize().getWidth(), game.getGameHeight()));
 
         addKeyListener(game);
         setFocusable(true);
         setVisible(true);
-        window.getContentPane().add(this);
+        //window.getContentPane().add(this);
         requestFocusInWindow();
 
         System.out.println("GamePanel created!");
@@ -90,8 +90,9 @@ public class GamePanel extends JPanel {
         Shape currentShape = game.getCurrentShape();
         if (currentShape != null) {
             paintCurrentShape(g, currentShape);
-            paintdroppedShape(g, currentShape, currentShape.numberOfPossibleDrops());
+            paintDroppedShape(g, currentShape, currentShape.numberOfPossibleDrops());
         }
+        
     }
 
     /**
@@ -129,7 +130,7 @@ public class GamePanel extends JPanel {
      * would drop down.
      * If the Shape is too close to the ground it doesn't make sense to draw the dropped Shape.
      **/
-    void paintdroppedShape (Graphics g, Shape currentShape, int dropps) {
+    void paintDroppedShape (Graphics g, Shape currentShape, int dropps) {
     	if (currentShape == null) {
             System.out.println("ERROR: GamePanel::paintCurrentShape -- No current Shape to draw!");
             return;
@@ -184,6 +185,12 @@ public class GamePanel extends JPanel {
     
     void drawSinglePiece (Graphics g, int x, int y, Color c) {
     	drawSinglePiece  (g, x, y, c, false);
+    }
+    
+    
+    void drawScore (Graphics g) {
+    	int score = game.getCurrentScore();
+    	
     }
     
     
