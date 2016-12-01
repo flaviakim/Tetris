@@ -87,10 +87,11 @@ public class GamePanel extends JPanel {
         super.paintComponent(g);
 
         paintGameBoard(g);
-        if (game.getCurrentShape() != null) {
-            paintCurrentShape(g);
+        Shape currentShape = game.getCurrentShape();
+        if (currentShape != null) {
+            paintCurrentShape(g, currentShape);
+            paintdroppedShape(g, currentShape, currentShape.numberOfPossibleDrops());
         }
-
     }
 
     /**
@@ -102,7 +103,7 @@ public class GamePanel extends JPanel {
             for (int y = 0; y < game.getColumns(); y++) {
                 if (game.isPositionOccupied(x, y)) {
                     // draw a rectangle at the appropriate position.
-                    drawSinglePiece(g, x, y, game.getPieceAt(x, y).color);
+                    drawSinglePiece(g, x, y, game.getPieceAt(x, y).color, false);
                 }
             }
         }
@@ -110,28 +111,60 @@ public class GamePanel extends JPanel {
     }
 
     /**
-     * Paints the Pieces currently falling down (the current Shape);
+     * Paints the {@link Piece}s currently falling down (the current Shape);
      **/
-    void paintCurrentShape (Graphics g) {
-        if (game.getCurrentShape() == null) {
+    void paintCurrentShape (Graphics g, Shape currentShape) {
+        if (currentShape == null) {
             System.out.println("ERROR: GamePanel::paintCurrentShape -- No current Shape to draw!");
             return;
         }
 
-        for (Piece p : game.getCurrentShape().getPieces()) {
-            drawSinglePiece(g, p.position.x, p.position.y, p.color);
+        for (Piece p : currentShape.getPieces()) {
+            drawSinglePiece(g, p.position.x, p.position.y, p.color, false);
+        }
+    }
+    
+    /**
+     * Paints the {@link Piece}s representing the position where the {@link currentShape}
+     * would drop down.
+     * If the Shape is too close to the ground it doesn't make sense to draw the dropped Shape.
+     **/
+    void paintdroppedShape (Graphics g, Shape currentShape, int dropps) {
+    	if (currentShape == null) {
+            System.out.println("ERROR: GamePanel::paintCurrentShape -- No current Shape to draw!");
+            return;
+        }
+        if (dropps <= 1) {
+         return;
+        }
+        
+        for (Piece p : currentShape.getPieces()) {
+            drawSinglePiece(g, p.position.x, p.position.y + dropps, p.color, true);
         }
     }
 
     /**
-     * Paints one single Piece at it's position with the Piece's color and with a small 3d effect (brighter and darker edges).
+     * Paints one single {@link Piece} at it's position.
+     * It's painted with the <code>Piece</code>'s color and with a small 3d effect (brighter and darker edges).
+     * If the painted piece is only a visual for where the current Shape would drop, it is
+     * drawn with a smaller alpha value.
+     *
+     * @param g       
+     * @param x        The horizontal position on the {@link gameBoard}.
+     * @param y        The vertical position on the <code>gameBoard</code>.
+     * @param c        The <code>Color</code> of the <code>Piece</code>, according to it's {@link Shape}.
+     * @param dropped  Whether the <code>Piece</code> is from the {@link currentShape} or a visual representation of where the <code>Shape</code> would drop.
      **/
-    void drawSinglePiece (Graphics g, int x, int y, Color c) {
+    void drawSinglePiece (Graphics g, int x, int y, Color c, boolean dropped) {
         // Get the PixelPositions for left, right top and bottom
         int firstPixelX = game.getPieceSize() * x;
         int firstPixelY = game.getPieceSize() * y;
         int lastPixelX = firstPixelX + game.getPieceSize() - 1;
         int lastPixelY = firstPixelY + game.getPieceSize() - 1;
+        
+        if (dropped) {
+        	c = new Color (c.getRed(), c.getGreen(), c.getBlue(), (c.getAlpha()/3));
+        }
 
         // Fill the middle of the square.
         g.setColor(c);
@@ -148,6 +181,13 @@ public class GamePanel extends JPanel {
         //System.out.println("Single Piece drawn at: (" + x + ", " + y + ")");
 
     }
+    
+    void drawSinglePiece (Graphics g, int x, int y, Color c) {
+    	drawSinglePiece  (g, x, y, c, false);
+    }
+    
+    
+    
     
     // TODO: Draw level information.
 

@@ -114,6 +114,26 @@ public class Shape {
 	}
 	
 	/**
+	 * Returns how many times the Shape can drop down
+	 **/
+	public int numberOfPossibleDrops () {
+		int count = 1;
+		while(true) {
+			for (int i = 0; i < pieces.length; i++) {
+				if (game.isPositionOccupied(pieces[i].position.x, pieces[i].position.y + count)) {
+					return (count - 1);
+				}
+			}
+			count++;
+			// Just to be sure
+			if (count > game.getColumns()+5) {
+				System.out.println("ERROR: Shape::numberOfPossibleDrops -- endless loop");
+				return -1;
+			}
+		}
+	}
+	
+	/**
 	 * This Method gets called, when a Piece can't drop any further.
 	 * It puts the Piece at it's current position into the gameBoard.
 	 * Afterwards there should always be a call to generate a new Piece!
