@@ -23,18 +23,18 @@ class StartScreenPanel extends JPanel implements KeyListener, ActionListener {
 
     // PROPERTIES
     
-	float[] speeds = {1f, 2f, 4f};
+	final float[] speeds = {1f, 2f, 4f};
 	
 	/**
 	 * The parent window in which this GamePanel is in.
 	 */
-	private GameWindow window;
+	final GameWindow window;
 	
-	private JButton[] playButtons;
+	JButton[] playButtons;
 	
-	private JButton playButtonEasy;
-	private JButton playButtonMedium;
-	private JButton playButtonHard;
+	JButton playButtonEasy;
+	JButton playButtonMedium;
+	JButton playButtonHard;
 	
 	
     // INITIALIZING
@@ -71,12 +71,8 @@ class StartScreenPanel extends JPanel implements KeyListener, ActionListener {
 			add(playButtons[i]);
 			playButtons[i].setIcon(new ImageIcon(playImages[i]));
 		}
-	
-		/*playButton.setIcon(new ImageIcon(bi1));
-		playButton.setRolloverIcon(new ImageIcon(bi2));
-		playButton.setPressedIcon(new ImageIcon(bi3));*/
 		
-        // TODO: Add more Buttons.
+        // TODO: Add Button/Checkbox for enabling/disabling dropped Shape.
         
     }
 
@@ -88,8 +84,17 @@ class StartScreenPanel extends JPanel implements KeyListener, ActionListener {
 
     public void keyPressed(KeyEvent e) {
         switch(e.getKeyCode()) {
-            case KeyEvent.VK_SPACE:
+            case KeyEvent.VK_1:
+                startGame(speeds[0]);
+                break;
+            case KeyEvent.VK_2:
                 startGame(speeds[1]);
+                break;
+            case KeyEvent.VK_3:
+                startGame(speeds[2]);
+                break;
+            case KeyEvent.VK_SPACE:
+                // TODO: enable/disable dopped Shape. 
                 break;
             default:
                 break;
