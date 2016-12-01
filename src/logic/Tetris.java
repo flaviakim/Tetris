@@ -18,17 +18,20 @@ public class Tetris implements ActionListener, KeyListener {
 	
 	final int rows;
 	public int getRows() { return rows; }
+	
 	final int columns;
 	public int getColumns() { return columns; }
 		
 	/**
 	 * The width of the game. Defined by the size of the window.
 	 **/
-	public int getGameWidth() { return (int) panel.getWindow().getSize().getWidth(); }	// The width of the Game
+	public int getGameWidth() { return (int) panel.getWindow().getSize().getWidth(); }
+	
 	/**
 	 * The size of a single square {@link Piece}. It's defined by {@link getGameWidth()}.
 	 **/
 	public int getPieceSize() { return getGameWidth() / rows; }
+	
 	/**
 	 * The height of the game is defined by the {@link getGameWidth()} and {@link getPieceSize()}
 	 **/
@@ -39,14 +42,23 @@ public class Tetris implements ActionListener, KeyListener {
 	 **/
 	final Timer updateTimer;
 	public Timer getTimer() { return updateTimer; }
+	
 	/**
 	 * How often the {@link currentShape} drops down one row in drops per second.
 	 **/
 	float speed = 1;
-	final float initialSpeed; // In case the speed changes during the game we wan't to restart it with this.
-	final float speedRaisePerLevel = 0.5f;	// By how much the speed gets raised per level.
+	
+	/**
+	 * Because the speed can change during the game this is for restarting it.
+	 **/
+	final float initialSpeed;
+	
+	final float speedRaisePerLevel = 0.5f;
+	
 	boolean isPaused = false;
+	
 	public boolean getPaused() { return isPaused; }
+	
 	boolean gameOver = false;
 	
 	/**
@@ -64,6 +76,10 @@ public class Tetris implements ActionListener, KeyListener {
 	 **/
 	Shape currentShape;
 	public Shape getCurrentShape() { return currentShape; }
+	
+	/**
+	 * The Shape which will become the {@link currentShape} in the next round.
+	 **/
 	Shape nextShape;
 	public Shape getNextShape() { return nextShape; }
 	
@@ -71,15 +87,18 @@ public class Tetris implements ActionListener, KeyListener {
 	 * Keeps track of the exact number of lines deleted in the current game.
 	 **/
 	int linesDeleted = 0;
+	
 	/**
 	 * The current Level that determines the <code>speed</code> and the <code>score</code>
 	 * gain per level.
 	 **/
 	int level = 1;
+	
 	/**
 	 * How many lines does the player have to delete to get to the next <code>level</code>.
 	 **/
 	final int linesPerLevel = 5;
+	
 	/**
 	 * The current score is calculated by speed and lines removed.
 	 **/
