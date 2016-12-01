@@ -9,14 +9,14 @@ public class Shape {
 	
 	// PROPERTIES
 	
-	ShapePrototypes prototype;
+	final ShapePrototypes prototype;
 	public ShapePrototypes getPrototype() { return prototype; }
-	Tetris game;
+	final Tetris game;
 	
 	Piece[] pieces;
 	public Piece[] getPieces() { return pieces; }
 	
-	boolean isRotateable;
+	final boolean isRotateable;
 	
 	
 	// INITIALIZING
@@ -114,7 +114,7 @@ public class Shape {
 	}
 	
 	/**
-	 * Returns how many times the Shape can drop down
+	 * Returns how many times the Shape can drop down.
 	 **/
 	public int numberOfPossibleDrops () {
 		int count = 1;

@@ -16,9 +16,9 @@ public class Tetris implements ActionListener, KeyListener {
 	
 	// PROPERTIES
 	
-	int rows = 10;
+	final int rows;
 	public int getRows() { return rows; }
-	int columns = 20;
+	final int columns;
 	public int getColumns() { return columns; }
 		
 	/**
@@ -37,14 +37,14 @@ public class Tetris implements ActionListener, KeyListener {
 	/**
 	 * The timer responsible for dropping the pieces down one row.
 	 **/
-	Timer updateTimer;
+	final Timer updateTimer;
 	public Timer getTimer() { return updateTimer; }
 	/**
 	 * How often the {@link currentShape} drops down one row in drops per second.
 	 **/
 	float speed = 1;
-	float initialSpeed = 1; // In case the speed changes during the game we wan't to restart it with this.
-	float speedRaisePerLevel = 0.5f;	// By how much the speed gets raised per level.
+	final float initialSpeed; // In case the speed changes during the game we wan't to restart it with this.
+	final float speedRaisePerLevel = 0.5f;	// By how much the speed gets raised per level.
 	boolean isPaused = false;
 	public boolean getPaused() { return isPaused; }
 	boolean gameOver = false;
@@ -71,11 +71,15 @@ public class Tetris implements ActionListener, KeyListener {
 	 * Keeps track of the exact number of lines deleted in the current game.
 	 **/
 	int linesDeleted = 0;
+	/**
+	 * The current Level that determines the <code>speed</code> and the <code>score</code>
+	 * gain per level.
+	 **/
 	int level = 1;
 	/**
 	 * How many lines does the player have to delete to get to the next <code>level</code>.
 	 **/
-	int linesPerLevel = 5;
+	final int linesPerLevel = 5;
 	/**
 	 * The current score is calculated by speed and lines removed.
 	 **/
@@ -88,7 +92,7 @@ public class Tetris implements ActionListener, KeyListener {
 	 * <code>class</code>es and the Visual <code>class</code>es. They shouldn't know
 	 * anything about each other.)
 	 **/
-	GamePanel panel; 
+	final GamePanel panel; 
 	
 	
 	// INITIALISING

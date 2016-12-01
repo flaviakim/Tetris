@@ -15,7 +15,7 @@ public class Piece {
 	
 	// PROPERTIES
 	
-	public Color color;
+	public final Color color;
 	
 	/**
 	 * The position on the {@link gameBoard}.

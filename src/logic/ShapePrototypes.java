@@ -28,9 +28,9 @@ public enum ShapePrototypes {
 	
 	Vector2[] positions; // TODO The first position should be the center piece. So we can rotate around it.
 	public Vector2[] getPositions() { return positions; }
-	boolean isRotateable;
+	final boolean isRotateable;
 	public boolean getIsRotateable() { return isRotateable; }
-	Color color;
+	final Color color;
 	public Color getColor() { return color; }
 	
 	final int startWidth;

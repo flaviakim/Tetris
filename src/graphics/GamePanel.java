@@ -17,7 +17,7 @@ public class GamePanel extends JPanel {
     // PROPERTIES
 
     private GameWindow window;	// The parent window in which this GamePanel is in.
-    public GameWindow getWindow() { return window; }
+	public GameWindow getWindow() { return window; }
 
     private Tetris game;		// Where the whole logic for the game is in.
     public Tetris getGame() { return game; }
