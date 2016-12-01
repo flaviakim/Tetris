@@ -53,7 +53,7 @@ public class Tetris implements ActionListener, KeyListener {
 	 **/
 	final float initialSpeed;
 	
-	final float speedRaisePerLevel = 0.5f;
+	final float speedRaisePerLevel = 0.25f;
 	
 	boolean isPaused = false;
 	
@@ -237,11 +237,11 @@ public class Tetris implements ActionListener, KeyListener {
 	 * Checks all rows and deletes them if they are full with deleteRow().
 	 **/
 	void checkFullRows() {
-		
+		int deletedRows = 0;
 		// Check each y row.
 		for (int y = 0; y < columns; y++) {
 			boolean full = true;
-			// Check each x in the y rows.
+			// Check each piece in the row.
 			for (int x = 0; x < rows; x++) {
 				// If one x isn't occupied, the y row isn't full and we can jump to the next y loop
 				if (isPositionOccupied(x, y) == false) {
@@ -251,32 +251,62 @@ public class Tetris implements ActionListener, KeyListener {
 			}
 			if (full) {
 				deleteRow(y);
-				y--; // We have to check this line again because all the lines dropped down one.
-				currentScore++;
+				deletedRows++;
 			}
 		}
-		
+		if (deletedRows > 0) dropDownEmptyRows(deletedRows); // TODO(maybe): remove the rows in the next update for a better visualisation.
+		increaseScoreForDeletedRows (deletedRows);
 		//System.out.println("deletedFullRows");
 	}
 	
 	/**
-	 * Deletes the specified y row and drops all the pieces above by one.
+	 * Deletes the specified row.
 	 **/
 	void deleteRow(int y) {
 		for (int x = 0; x < rows; x++) {
-			// Delete every piece in the y row.
+			// Delete every piece in the row.
 			gameBoard[x][y] = null;
 			
-			// TODO: Animate Line Removal (pause game, send message to panel, wait for panel to finish animation, unpause).
-			// or by setting a variable +1 and if the variable is >0 the update Timer drops every piece and sets it -1. (This would just wait with dropping the line(s) one tic instead of animating sth)
+			// TODO(maybe): Animate Line Removal (pause game, send message to panel, wait for panel to finish animation, unpause).
 			
-			// Drop every row above the y row down by one (xrow for xrow)
-			for (int i = y; i > 0; i--) {
-				gameBoard[x][i] = gameBoard[x][i-1];
-			}
 		}
 	}
 	
+	/**
+	 * Dropps down all the empty rows.
+	 *
+	 * @param count  How many rows were deleted this turn, so we don't check all the empty lines above.
+	 **/
+	void dropDownEmptyRows (int count) {
+		for (int y = columns-1; y >= 0; y--) {
+			boolean empty = true;
+			for (int x = 0; x < rows; x++) {
+				if (isPositionOccupied(x, y)) {
+					empty = false;
+					break;
+				}
+			}
+			if (empty) {
+				count--;
+				// Drop every row above the empty row down by one (row for row)
+				for (int i = y; i > 0; i--) {
+					for (int x = 0; x < rows; x++) {
+						gameBoard[x][i] = gameBoard[x][i-1];
+					}
+				}
+				y++; // We have to check the row again because it's been deleted.
+			}
+			if (count <= 0) return;
+		}
+	}
+	
+	/**
+	 * Increases the score according to the level and how many rows were deleted with one Shape.
+	 * The number of deleted Rows is squared and then multiplied with the level.
+	 **/
+	void increaseScoreForDeletedRows (int deletedRows) {
+		currentScore += deletedRows * deletedRows * level;
+	}
 	
 	/**
 	 * If a Piece can't be placed anymore this Game Over Method should end the Game.

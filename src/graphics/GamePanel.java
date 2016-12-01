@@ -163,7 +163,7 @@ public class GamePanel extends JPanel {
         int lastPixelY = firstPixelY + game.getPieceSize() - 1;
         
         if (dropped) {
-        	c = new Color (c.getRed(), c.getGreen(), c.getBlue(), (c.getAlpha()/3));
+        	c = new Color (c.getRed(), c.getGreen(), c.getBlue(), (c.getAlpha()/5));
         }
 
         // Fill the middle of the square.
