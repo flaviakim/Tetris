@@ -94,7 +94,7 @@ class StartScreenPanel extends JPanel implements KeyListener, ActionListener {
 			startGame(Difficulty.HARD);
                 break;
             case KeyEvent.VK_SPACE:
-                // TODO: enable/disable dopped Shape. 
+                // TODO: enable/disable dropped Shape.
                 break;
             default:
                 break;
