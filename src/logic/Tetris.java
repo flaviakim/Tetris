@@ -383,6 +383,9 @@ public class Tetris implements ActionListener, KeyListener {
 			case KeyEvent.VK_UP:
 				currentShape.rotate();
 				break;
+			case KeyEvent.VK_D:
+				panel.changeDroppedShape();
+				break;
 			default:
 				// Non-relevant Key Pressed. Ignore.
 				break;

@@ -81,6 +81,18 @@ public class GamePanel extends JPanel {
         repaint();
     }
 
+    public void changeDroppedShapeTo(boolean show) {
+        useDroppedShape = show;
+        this.repaint();
+    }
+
+    /**
+     * Changes whether the dropped Shape preview should be displayed.
+     */
+    public void changeDroppedShape() {
+        changeDroppedShapeTo(!useDroppedShape);
+    }
+
     // PAINTING
 
     /**
@@ -131,7 +143,7 @@ public class GamePanel extends JPanel {
     }
     
     /**
-     * Paints the {@link Piece}s representing the position where the {@link currentShape}
+     * Paints the {@link Piece}s representing the position where the currentShape
      * would drop down.
      * If the Shape is too close to the ground it doesn't make sense to draw the dropped Shape.
      **/
